@@ -109,10 +109,10 @@ class CreateTransoProgressScreen extends StatelessWidget {
                 ),
               ),
               Constants.sizeH50,
-              const InputField(
-                heading: "Current Status",
-                hight: 150,
-              ),
+              // const InputField(
+              //   heading: "Current Status",
+              //   hight: 150,
+              // ),
             ],
           ),
         ),

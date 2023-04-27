@@ -1,10 +1,36 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:transo/helpers/constents.dart';
+import 'package:transo/provider/local_db_provider.dart';
 import 'package:transo/views/screens/create_transo_screen.dart';
 import 'package:transo/views/screens/transo_overview_page.dart';
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
+
+  @override
+  State<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
+  late TransoProvider provider;
+//  late final LocalDB _crudStorage;
+  @override
+  void initState() {
+    // _crudStorage = LocalDB("db");
+    // _crudStorage.open();
+    provider = Provider.of<TransoProvider>(context, listen: false);
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      provider.readData();
+    });
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    // _crudStorage.close();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -43,19 +69,78 @@ class HomeScreen extends StatelessWidget {
                 ],
               ),
               SizedBox(
-                height: size.height / 1,
-                width: size.width,
-                child: ListView.builder(
-                  shrinkWrap: true,
-                  itemCount: 3,
-                  itemBuilder: (context, index) {
-                    return const TransfoCard(
-                      title: "Abs Challenge",
-                      totalDays: "1",
-                    );
-                  },
-                ),
-              ),
+                  height: size.height / 1,
+                  width: size.width,
+                  child: ListView.builder(
+                    shrinkWrap: true,
+                    itemCount: 3,
+                    itemBuilder: (context, index) {
+                      //  final person = value.transoCreateList[index];
+                      return TransfoCard(
+                        title: "value",
+                        totalDays: "1",
+                      );
+                    },
+                  )
+                  //  StreamBuilder(
+                  //   stream: _crudStorage.all(),
+                  //   builder: (context, snapshot) {
+                  //     final tansoCreateData =
+                  //         snapshot.data as List<TransoCreateModel>;
+                  //     print("tansoCreateData");
+                  //     print(tansoCreateData);
+                  //     switch (snapshot.connectionState) {
+                  //       case ConnectionState.active:
+                  //       case ConnectionState.waiting:
+                  //         return ListView.builder(
+                  //           shrinkWrap: true,
+                  //           itemCount: tansoCreateData.length,
+                  //           itemBuilder: (context, index) {
+                  //             final person = tansoCreateData[index];
+                  //             return TransfoCard(
+                  //               title: person.target,
+                  //               totalDays: "1",
+                  //             );
+                  //           },
+                  //         );
+
+                  //       default:
+                  //         return Center(child: const CircularProgressIndicator());
+                  //     }
+                  //     // if (snapshot.connectionState == ConnectionState.waiting) {
+                  //     //   return Text(
+                  //     //     'Loading!',
+                  //     //     style: TextStyle(
+                  //     //       fontSize: 14,
+                  //     //       fontWeight: FontWeight.w600,
+                  //     //     ),
+                  //     //   );
+                  //     // }
+
+                  //     // if (!snapshot.hasData) {
+                  //     //   return Text(
+                  //     //     'No Content Found!',
+                  //     //     style: TextStyle(
+                  //     //       fontSize: 14,
+                  //     //       fontWeight: FontWeight.w600,
+                  //     //     ),
+                  //     //   );
+                  //     // }
+                  //     // final tansoCreateData =
+                  //     //     snapshot.data as List<TransoCreateModel>;
+                  //     // return ListView.builder(
+                  //     //   shrinkWrap: true,
+                  //     //   itemCount: tansoCreateData.length,
+                  //     //   itemBuilder: (context, index) {
+                  //     //     return const TransfoCard(
+                  //     //       title: "Abs Challenge",
+                  //     //       totalDays: "1",
+                  //     //     );
+                  //     //   },
+                  //     // );
+                  //   },
+                  // ),
+                  ),
             ],
           ),
         ),
@@ -92,13 +177,14 @@ class TransfoCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return InkWell(onTap: () {
-       Navigator.of(context).push(MaterialPageRoute(
+    return InkWell(
+      onTap: () {
+        Navigator.of(context).push(MaterialPageRoute(
           builder: (context) {
             return const TransoOverView();
           },
         ));
-    },
+      },
       child: Container(
         margin: const EdgeInsets.only(bottom: 20),
         height: 100,

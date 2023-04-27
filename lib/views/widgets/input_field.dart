@@ -1,11 +1,15 @@
-
 import 'package:flutter/material.dart';
 import 'package:transo/helpers/constents.dart';
 
 class InputField extends StatelessWidget {
-  const InputField({super.key, required this.heading, required this.hight});
+  const InputField(
+      {super.key,
+      required this.heading,
+      required this.hight,
+      required this.nameController});
   final String heading;
   final double hight;
+  final TextEditingController nameController;
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
@@ -32,7 +36,7 @@ class InputField extends StatelessWidget {
                 border: Border.all(color: Colors.black),
                 borderRadius: BorderRadius.circular(29)),
             child: TextFormField(
-              //   controller: nameController,
+              controller: nameController,
               decoration: InputDecoration(
                 border: InputBorder.none,
               ),
