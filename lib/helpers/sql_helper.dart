@@ -107,6 +107,16 @@ class LocalDB {
     }
   }
 
+  Future<bool> close() async {
+    final db = _db;
+
+    if (db == null) {
+      return false;
+    }
+    await db.close();
+    return true;
+  }
+
   Future<bool> open() async {
     if (_db != null) {
       return true;
