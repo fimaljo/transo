@@ -34,6 +34,7 @@ class _CreateTransoProgressScreenState
   @override
   void initState() {
     super.initState();
+   
     _provider = Provider.of(context, listen: false);
 
     if (widget.id == null) {
@@ -49,7 +50,6 @@ class _CreateTransoProgressScreenState
     }
   }
 
-  //late ConfettiController _controllerBottomCenter;
   String? _file;
   _selectImage(BuildContext parentContext) async {
     return showDialog(
@@ -113,29 +113,18 @@ class _CreateTransoProgressScreenState
           padding: const EdgeInsets.only(left: 15, right: 15, top: 30),
           child: Column(
             children: [
-              // Align(
-              //   alignment: Alignment.bottomCenter,
-              //   child: ConfettiWidget(
-              //     confettiController: _controllerBottomCenter,
-              //     blastDirection: -pi / 2,
-              //     emissionFrequency: 0.2,
-              //     numberOfParticles: 20,
-              //     blastDirectionality: BlastDirectionality.explosive,
-              //     gravity: 0.1,
-              //   ),
-              // ),
+            
               CustomeHeader(
                 text: "Day ${widget.dayCount}",
                 ontap: () {},
               ),
               Constants.sizeH30,
-
               Align(
                 alignment: Alignment.center,
                 child: Container(
                     margin: const EdgeInsets.only(right: 10),
                     height: 330,
-                    width: 250,
+                    width: 220,
                     decoration: BoxDecoration(
                       color: const Color.fromARGB(126, 37, 150, 190),
                       borderRadius: BorderRadius.circular(20),
@@ -247,9 +236,7 @@ class _CreateTransoProgressScreenState
                             ),
                           )),
               ),
-
               Constants.sizeH50,
-
               InputField(
                 nameController: _statusController,
                 heading: "Current Status",

@@ -1,8 +1,12 @@
+import 'dart:async';
 import 'dart:io';
+import 'dart:math';
 
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:confetti/confetti.dart';
 import 'package:flip_card/flip_card.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:provider/provider.dart';
 
 import 'package:transo/helpers/constents.dart';
@@ -25,14 +29,32 @@ class TransoOverView extends StatefulWidget {
 
 class _TransoOverViewState extends State<TransoOverView> {
   late TransoProvider _provider;
+  int _selectedButtonIndex = 0;
 
+  final List<String> _buttonTextList = [
+    'Tap to see the image',
+    'Double tap to delete',
+    'Long press to delete',
+  ];
+  late ConfettiController _controllerBottomCenter;
   @override
   void initState() {
     _provider = Provider.of(context, listen: false);
+    _controllerBottomCenter =
+        ConfettiController(duration: const Duration(seconds: 2));
 
-    // _provider.getDetails(widget.data.id);
-
-    // _provider.readJoinedDetailsData(widget.data.id, _provider.transoDetailsCreateList.);
+    widget.totalDayCount == _provider.transoDetailsCreateListT.length
+        ? setState(() {
+            _controllerBottomCenter.play();
+          })
+        : null;
+    // Start a timer to automatically switch to the next button
+    Timer.periodic(const Duration(seconds: 2), (_) {
+      setState(() {
+        _selectedButtonIndex =
+            (_selectedButtonIndex + 1) % _buttonTextList.length;
+      });
+    });
 
     super.initState();
   }
@@ -91,16 +113,27 @@ class _TransoOverViewState extends State<TransoOverView> {
             },
           ));
         },
-        child: Center(
+        child: const Center(
           child: Icon(Icons.add),
         ),
-      ),
+      ).animate(delay: const Duration(seconds: 1)).moveY(),
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.only(left: 15, right: 15, top: 30),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              Align(
+                alignment: Alignment.bottomCenter,
+                child: ConfettiWidget(
+                  confettiController: _controllerBottomCenter,
+                  blastDirection: -pi / 2,
+                  emissionFrequency: 0.2,
+                  numberOfParticles: 20,
+                  blastDirectionality: BlastDirectionality.explosive,
+                  gravity: 0.1,
+                ),
+              ),
               CustomeHeader(
                 text: "OverView",
                 ontap: () {
@@ -112,7 +145,7 @@ class _TransoOverViewState extends State<TransoOverView> {
                     },
                   ));
                 },
-              ),
+              ).animate(delay: const Duration(seconds: 1)).moveY(),
               Constants.sizeH30,
               Text(
                 widget.data.title,
@@ -120,15 +153,15 @@ class _TransoOverViewState extends State<TransoOverView> {
                     color: Constants.scaffoldColor,
                     fontSize: 15,
                     fontWeight: FontWeight.bold),
-              ),
+              ).animate(delay: const Duration(seconds: 1)).moveY(),
               Constants.sizeH30,
               data.transoDetailsCreateListT.isEmpty
                   ? Align(
                       alignment: Alignment.center,
                       child: Container(
                         margin: const EdgeInsets.only(right: 10),
-                        height: 250,
-                        width: 200,
+                        height: 330,
+                        width: 220,
                         decoration: BoxDecoration(
                           color: const Color.fromARGB(126, 37, 150, 190),
                           borderRadius: BorderRadius.circular(20),
@@ -141,7 +174,7 @@ class _TransoOverViewState extends State<TransoOverView> {
                                 text: TextSpan(
                                   style: Constants.poppinsFont.copyWith(
                                       color: Constants.scaffoldColor,
-                                      fontSize: 32,
+                                      fontSize: 36,
                                       fontWeight: FontWeight.w100),
                                   children: const <TextSpan>[
                                     TextSpan(
@@ -151,7 +184,7 @@ class _TransoOverViewState extends State<TransoOverView> {
                                   ],
                                 ),
                               ),
-                              Constants.sizeH10,
+                              Constants.sizeH50,
                               InkWell(
                                 onTap: () {
                                   Navigator.of(context).push(MaterialPageRoute(
@@ -290,7 +323,7 @@ class _TransoOverViewState extends State<TransoOverView> {
                                                   ),
                                                 ),
                                                 Text(
-                                                  "Current Status",
+                                                  "Daily Status",
                                                   style: Constants.poppinsFont
                                                       .copyWith(
                                                           color: Constants
@@ -312,35 +345,47 @@ class _TransoOverViewState extends State<TransoOverView> {
                                                     ),
                                                   ),
                                                 ),
-                                                Padding(
-                                                  padding:
-                                                      const EdgeInsets.only(
-                                                          left: 20.0),
-                                                  child: Row(
-                                                    children: [
-                                                      const Icon(Icons
-                                                          .touch_app_outlined),
-                                                      Text(
-                                                        "Tap to See Image",
-                                                        style: Constants
-                                                            .poppinsFont
-                                                            .copyWith(
-                                                                color: Constants
-                                                                    .scaffoldColor,
-                                                                fontSize: 10,
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .w200),
-                                                      )
-                                                    ],
-                                                  ),
-                                                )
+                                                AnimatedSwitcher(
+                                                    duration: const Duration(
+                                                        milliseconds: 500),
+                                                    child: Padding(
+                                                      padding:
+                                                          const EdgeInsets.only(
+                                                              left: 10.0),
+                                                      child: Row(
+                                                        children: [
+                                                          const Icon(
+                                                            Icons
+                                                                .touch_app_outlined,
+                                                            color: Colors.white,
+                                                          ),
+                                                          Text(
+                                                            _buttonTextList[
+                                                                _selectedButtonIndex],
+                                                            key: ValueKey<int>(
+                                                                _selectedButtonIndex),
+                                                            style: Constants
+                                                                .poppinsFont
+                                                                .copyWith(
+                                                                    color: Colors
+                                                                        .white,
+                                                                    fontSize:
+                                                                        10,
+                                                                    fontWeight:
+                                                                        FontWeight
+                                                                            .w200),
+                                                          )
+                                                        ],
+                                                      ),
+                                                    )),
                                               ],
                                             ),
                                           )),
                                     ],
                                   ),
-                                ),
+                                )
+                                    .animate(delay: const Duration(seconds: 1))
+                                    .moveY(),
                                 back: Container(
                                   margin: const EdgeInsets.only(right: 10),
                                   height: 250,
@@ -395,7 +440,8 @@ class _TransoOverViewState extends State<TransoOverView> {
                                       data.transoDetailsCreateListT.length - 1
                                   ? BoxDecoration(
                                       borderRadius: BorderRadius.circular(5),
-                                      color: Color.fromARGB(180, 2, 179, 8),
+                                      color:
+                                          const Color.fromARGB(180, 2, 179, 8),
                                     )
                                   : BoxDecoration(
                                       borderRadius: BorderRadius.circular(5),
@@ -409,15 +455,15 @@ class _TransoOverViewState extends State<TransoOverView> {
                           .toList()
                       : [],
                 ),
-              ),
+              ).animate(delay: const Duration(seconds: 1)).moveY(),
               Constants.sizeH30,
               Text(
-                "Your Transformations",
+                "Current Status",
                 style: Constants.poppinsFont.copyWith(
                     color: Constants.scaffoldColor,
                     fontSize: 15,
                     fontWeight: FontWeight.bold),
-              ),
+              ).animate(delay: const Duration(seconds: 1)).moveY(),
               SizedBox(
                 height: 60,
                 width: 200,
@@ -428,11 +474,11 @@ class _TransoOverViewState extends State<TransoOverView> {
                     fontSize: 12,
                   ),
                 ),
-              ),
+              ).animate(delay: const Duration(seconds: 1)).moveY(),
             ],
           ),
         ),
       ),
-    );
+    ).animate(delay: const Duration(seconds: 1)).moveY();
   }
 }

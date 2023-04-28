@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:provider/provider.dart';
 import 'package:transo/helpers/constents.dart';
 import 'package:transo/models/transo_create_model.dart';
@@ -39,6 +40,7 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
+    final providerForList = Provider.of<TransoProvider>(context, listen: true);
     return Scaffold(
       body: SingleChildScrollView(
         child: Padding(
@@ -46,17 +48,21 @@ class _HomeScreenState extends State<HomeScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const CustomeAppBar(),
+              const CustomeAppBar()
+                  .animate(delay: Duration(milliseconds: 20))
+                  .move(),
               Constants.sizeH30,
-              textWish(),
+              textWish().animate(delay: Duration(seconds: 1)).move(),
               Text(
                 "Ready for a Transoformation ?",
                 style: Constants.poppinsFont.copyWith(
                     color: const Color.fromARGB(126, 20, 20, 20),
                     fontSize: 16,
                     fontWeight: FontWeight.w100),
-              ),
-              CreateTransfoWidget(size: size),
+              ).animate().move(),
+              CreateTransfoWidget(size: size)
+                  .animate(delay: Duration(seconds: 1))
+                  .moveY(),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -66,34 +72,68 @@ class _HomeScreenState extends State<HomeScreen> {
                         color: Constants.scaffoldColor,
                         fontSize: 15,
                         fontWeight: FontWeight.bold),
-                  ),
+                  ).animate().scaleY(),
                   IconButton(
                       onPressed: () {},
                       icon: const Icon(Icons.keyboard_arrow_right))
                 ],
               ),
               SizedBox(
-                  height: size.height / 1,
-                  width: size.width,
-                  child: Consumer<TransoProvider>(
-                      builder: (context, value, child) =>
-                          value.transoCreateList.isEmpty
-                              ? Text("No Data")
-                              : ListView.builder(
-                                  physics: NeverScrollableScrollPhysics(),
-                                  shrinkWrap: true,
-                                  itemCount: value.transoCreateList.length,
-                                  itemBuilder: (context, index) {
-                                    TransformationModel datas =
-                                        value.transoCreateList[index];
+                height: size.height / 1,
+                width: size.width,
+                child: Consumer<TransoProvider>(
+                  builder: (context, value, child) => value
+                          .transoCreateList.isEmpty
+                      ? Padding(
+                          padding: const EdgeInsets.only(top: 100),
+                          child: Column(
+                            children: [
+                              Image.asset(
+                                "assets/images/cloud.png",
+                                height: 200,
+                                // width: 50,
+                              ),
+                              Text(
+                                "Create Your Transformation",
+                                style: Constants.poppinsFont.copyWith(
+                                    color: Constants.scaffoldColor,
+                                    fontSize: 15,
+                                    fontWeight: FontWeight.bold),
+                              ),
+                            ],
+                          ),
+                        )
+                      : ListView.builder(
+                          physics: NeverScrollableScrollPhysics(),
+                          shrinkWrap: true,
+                          itemCount: providerForList.transoCreateList.length,
+                          itemBuilder: (context, index) {
+                            Color color;
+                            String image;
+                            if (index % 2 == 0) {
+                              color = Color.fromARGB(115, 255, 153, 0);
+                            } else {
+                              color = const Color.fromARGB(41, 37, 149, 190);
+                            }
+                            if (index % 2 == 0) {
+                              image = "assets/icons/goal (1).png";
+                            } else {
+                              image = "assets/icons/difficulties.png";
+                            }
+                            TransformationModel datas =
+                                providerForList.transoCreateList[index];
 
-                                    return TransfoCard(
-                                      title: datas.title,
-                                      totalDays: int.parse(datas.totalDays),
-                                      datas: datas,
-                                    );
-                                  },
-                                ))),
+                            return TransfoCard(
+                              color: color,
+                              title: datas.title,
+                              totalDays: int.parse(datas.totalDays),
+                              datas: datas,
+                              assetImage: image,
+                            ).animate(delay: Duration(seconds: 1)).moveY();
+                          },
+                        ),
+                ),
+              ),
             ],
           ),
         ),
@@ -125,12 +165,17 @@ class TransfoCard extends StatelessWidget {
     required this.title,
     required this.totalDays,
     required this.datas,
+    required this.color,
+    required this.assetImage,
   });
   final String title;
   final int totalDays;
   final TransformationModel datas;
+  final Color color;
+  final String assetImage;
   @override
   Widget build(BuildContext context) {
+    final provider = Provider.of<TransoProvider>(context, listen: true);
     return InkWell(
       onTap: () {
         Navigator.of(context).push(MaterialPageRoute(
@@ -165,9 +210,15 @@ class TransfoCard extends StatelessWidget {
                 child: Container(
                   height: 90,
                   width: 80,
-                  decoration: const BoxDecoration(
-                      borderRadius: BorderRadius.all(Radius.circular(20)),
-                      color: Color.fromARGB(115, 255, 153, 0)),
+                  decoration: BoxDecoration(
+                      borderRadius: const BorderRadius.all(Radius.circular(20)),
+                      color: color),
+                  child: Center(
+                    child: Image.asset(
+                      assetImage,
+                      height: 50,
+                    ),
+                  ),
                 ),
               ),
               Text(
@@ -184,7 +235,13 @@ class TransfoCard extends StatelessWidget {
                     fontSize: 15,
                     fontWeight: FontWeight.bold),
               ),
-              const Icon(Icons.keyboard_arrow_right)
+              IconButton(
+                  onPressed: () {
+                    provider.delete(datas.id);
+                    provider.readData();
+                    provider.readDetailsData();
+                  },
+                  icon: Icon(Icons.delete_outlined))
             ],
           ),
         ),
@@ -226,8 +283,15 @@ class CreateTransfoWidget extends StatelessWidget {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
-                const CircleAvatar(
+                CircleAvatar(
                   backgroundColor: Colors.black,
+                  child: Center(
+                    child: Image.asset(
+                      "assets/icons/target (1).png",
+                      height: 20,
+                      color: Colors.white,
+                    ),
+                  ),
                 ),
                 RichText(
                   text: TextSpan(
@@ -249,6 +313,12 @@ class CreateTransfoWidget extends StatelessWidget {
                   decoration: BoxDecoration(
                       color: const Color.fromARGB(41, 37, 149, 190),
                       borderRadius: BorderRadius.circular(8)),
+                  child: Center(
+                    child: Image.asset(
+                      "assets/icons/right-arrow.png",
+                      height: 30,
+                    ),
+                  ),
                 ),
               ],
             ),

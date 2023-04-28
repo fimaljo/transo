@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:provider/provider.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:transo/models/transo_create_model.dart';
@@ -31,7 +32,7 @@ class _CreateTransoScreenState extends State<CreateTransoScreen> {
   void initState() {
     super.initState();
     _provider = Provider.of(context, listen: false);
-   
+
     if (widget.id == null) {
       _titleController = TextEditingController();
       _targetController = TextEditingController();
@@ -120,7 +121,6 @@ class _CreateTransoScreenState extends State<CreateTransoScreen> {
                             ),
                             onPressed: () {
                               saveData();
-                              
                             },
                             child: Text(
                               'Create',
@@ -153,7 +153,7 @@ class _CreateTransoScreenState extends State<CreateTransoScreen> {
                 ),
               ),
             ],
-          ),
+          ).animate().move(),
         ),
       ),
     );

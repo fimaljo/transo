@@ -27,7 +27,7 @@ class SqlHelper {
     detailsDatabase = await openDatabase(pathD, version: 1,
         onCreate: (Database db, int version) async {
       await db.execute(
-          'CREATE TABLE $secondTableName ( ID INTEGER PRIMARY KEY AUTOINCREMENT, CURRENT_STATUS TEXT, DAY TEXT, IMAGE_PATH TEXT, TRANSO_ID INTEGER )');
+          'CREATE TABLE $secondTableName ( ID INTEGER PRIMARY KEY AUTOINCREMENT, CURRENT_STATUS TEXT, DAY TEXT, IMAGE_PATH TEXT, TRANSO_ID INTEGER, FOREIGN KEY (TRANSO_ID) REFERENCES Transformation(ID) ON DELETE CASCADE )');
     });
   }
 
@@ -75,8 +75,4 @@ class SqlHelper {
   }
 
   //inner join
-
-
-
-  
 }

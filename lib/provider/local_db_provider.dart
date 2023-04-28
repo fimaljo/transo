@@ -55,7 +55,13 @@ class TransoProvider with ChangeNotifier {
     // print(result);
     log(result);
   }
-
+ delete(int id) async {
+    setIsLoading(true);
+    String query = "delete from ${SqlHelper.tableName} where id='$id'";
+    int result = await SqlHelper.deleteData(query);
+    print(result);
+    setIsLoading(false);
+  }
   ///
 
   insertDeatilsData(
