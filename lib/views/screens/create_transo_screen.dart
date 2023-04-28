@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:sqflite/sqflite.dart';
+import 'package:transo/models/transo_create_model.dart';
 import 'package:transo/provider/local_db_provider.dart';
 import 'package:transo/views/widgets/input_field.dart';
 
@@ -11,8 +12,8 @@ import '../../helpers/sql_helper.dart';
 import '../widgets/custome_header.dart';
 
 class CreateTransoScreen extends StatefulWidget {
-  const CreateTransoScreen({super.key});
-
+  const CreateTransoScreen({super.key, this.id});
+  final int? id;
   @override
   State<CreateTransoScreen> createState() => _CreateTransoScreenState();
 }
@@ -29,16 +30,35 @@ class _CreateTransoScreenState extends State<CreateTransoScreen> {
   @override
   void initState() {
     super.initState();
-    _titleController = TextEditingController();
-    _targetController = TextEditingController();
-    _statusController = TextEditingController();
-    _totalDaysController = TextEditingController();
     _provider = Provider.of(context, listen: false);
+   
+    if (widget.id == null) {
+      _titleController = TextEditingController();
+      _targetController = TextEditingController();
+      _statusController = TextEditingController();
+      _totalDaysController = TextEditingController();
+    } else {
+      TransformationModel obj = _provider.transoCreateList
+          .firstWhere((element) => element.id == widget.id);
+      _titleController = TextEditingController(text: obj.title);
+      _targetController = TextEditingController(text: obj.target);
+      _statusController = TextEditingController(text: obj.currentStatus);
+      _totalDaysController = TextEditingController(text: obj.totalDays);
+    }
   }
 
   saveData() async {
-    _provider.insertData(_titleController.text, _targetController.text,
+    await _provider.insertData(_titleController.text, _targetController.text,
         _statusController.text, _totalDaysController.text);
+    await _provider.readData();
+    Navigator.pop(context);
+  }
+
+  updateData() async {
+    await _provider.updateData(_titleController.text, _targetController.text,
+        _statusController.text, _totalDaysController.text, widget.id!);
+    await _provider.readData();
+    Navigator.pop(context);
   }
 
   @override
@@ -62,8 +82,9 @@ class _CreateTransoScreenState extends State<CreateTransoScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const CustomeHeader(
+              CustomeHeader(
                 text: "Create",
+                ontap: () {},
               ),
               Constants.sizeH30,
               Padding(
@@ -90,22 +111,43 @@ class _CreateTransoScreenState extends State<CreateTransoScreen> {
                       heading: "Total Days",
                       hight: 50,
                     ),
-                    ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Color.fromARGB(126, 37, 150, 190),
-                        fixedSize: Size(size.width * 0.4, 50),
-                      ),
-                      onPressed: () {
-                        saveData();
-                      },
-                      child: Text(
-                        'Create',
-                        style: Constants.poppinsFont.copyWith(
-                            color: Colors.white,
-                            fontSize: 15,
-                            fontWeight: FontWeight.bold),
-                      ),
-                    ),
+                    widget.id == null
+                        ? ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor:
+                                  Color.fromARGB(126, 37, 150, 190),
+                              fixedSize: Size(size.width * 0.4, 50),
+                            ),
+                            onPressed: () {
+                              saveData();
+                              
+                            },
+                            child: Text(
+                              'Create',
+                              style: Constants.poppinsFont.copyWith(
+                                  color: Colors.white,
+                                  fontSize: 15,
+                                  fontWeight: FontWeight.bold),
+                            ),
+                          )
+                        : ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor:
+                                  const Color.fromARGB(126, 37, 150, 190),
+                              fixedSize: Size(size.width * 0.4, 50),
+                            ),
+                            onPressed: () {
+                              updateData();
+                              Navigator.pop(context);
+                            },
+                            child: Text(
+                              'Update',
+                              style: Constants.poppinsFont.copyWith(
+                                  color: Colors.white,
+                                  fontSize: 15,
+                                  fontWeight: FontWeight.bold),
+                            ),
+                          ),
                     Constants.sizeH30,
                   ],
                 ),

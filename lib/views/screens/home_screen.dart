@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:transo/helpers/constents.dart';
+import 'package:transo/models/transo_create_model.dart';
 import 'package:transo/provider/local_db_provider.dart';
 import 'package:transo/views/screens/create_transo_screen.dart';
 import 'package:transo/views/screens/transo_overview_page.dart';
@@ -22,6 +23,9 @@ class _HomeScreenState extends State<HomeScreen> {
     provider = Provider.of<TransoProvider>(context, listen: false);
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       provider.readData();
+      provider.readDetailsData();
+
+      // provider.fetchBaseTableWithDetails();
     });
     super.initState();
   }
@@ -71,76 +75,25 @@ class _HomeScreenState extends State<HomeScreen> {
               SizedBox(
                   height: size.height / 1,
                   width: size.width,
-                  child: ListView.builder(
-                    shrinkWrap: true,
-                    itemCount: 3,
-                    itemBuilder: (context, index) {
-                      //  final person = value.transoCreateList[index];
-                      return TransfoCard(
-                        title: "value",
-                        totalDays: "1",
-                      );
-                    },
-                  )
-                  //  StreamBuilder(
-                  //   stream: _crudStorage.all(),
-                  //   builder: (context, snapshot) {
-                  //     final tansoCreateData =
-                  //         snapshot.data as List<TransoCreateModel>;
-                  //     print("tansoCreateData");
-                  //     print(tansoCreateData);
-                  //     switch (snapshot.connectionState) {
-                  //       case ConnectionState.active:
-                  //       case ConnectionState.waiting:
-                  //         return ListView.builder(
-                  //           shrinkWrap: true,
-                  //           itemCount: tansoCreateData.length,
-                  //           itemBuilder: (context, index) {
-                  //             final person = tansoCreateData[index];
-                  //             return TransfoCard(
-                  //               title: person.target,
-                  //               totalDays: "1",
-                  //             );
-                  //           },
-                  //         );
+                  child: Consumer<TransoProvider>(
+                      builder: (context, value, child) =>
+                          value.transoCreateList.isEmpty
+                              ? Text("No Data")
+                              : ListView.builder(
+                                  physics: NeverScrollableScrollPhysics(),
+                                  shrinkWrap: true,
+                                  itemCount: value.transoCreateList.length,
+                                  itemBuilder: (context, index) {
+                                    TransformationModel datas =
+                                        value.transoCreateList[index];
 
-                  //       default:
-                  //         return Center(child: const CircularProgressIndicator());
-                  //     }
-                  //     // if (snapshot.connectionState == ConnectionState.waiting) {
-                  //     //   return Text(
-                  //     //     'Loading!',
-                  //     //     style: TextStyle(
-                  //     //       fontSize: 14,
-                  //     //       fontWeight: FontWeight.w600,
-                  //     //     ),
-                  //     //   );
-                  //     // }
-
-                  //     // if (!snapshot.hasData) {
-                  //     //   return Text(
-                  //     //     'No Content Found!',
-                  //     //     style: TextStyle(
-                  //     //       fontSize: 14,
-                  //     //       fontWeight: FontWeight.w600,
-                  //     //     ),
-                  //     //   );
-                  //     // }
-                  //     // final tansoCreateData =
-                  //     //     snapshot.data as List<TransoCreateModel>;
-                  //     // return ListView.builder(
-                  //     //   shrinkWrap: true,
-                  //     //   itemCount: tansoCreateData.length,
-                  //     //   itemBuilder: (context, index) {
-                  //     //     return const TransfoCard(
-                  //     //       title: "Abs Challenge",
-                  //     //       totalDays: "1",
-                  //     //     );
-                  //     //   },
-                  //     // );
-                  //   },
-                  // ),
-                  ),
+                                    return TransfoCard(
+                                      title: datas.title,
+                                      totalDays: int.parse(datas.totalDays),
+                                      datas: datas,
+                                    );
+                                  },
+                                ))),
             ],
           ),
         ),
@@ -171,17 +124,21 @@ class TransfoCard extends StatelessWidget {
     super.key,
     required this.title,
     required this.totalDays,
+    required this.datas,
   });
   final String title;
-  final String totalDays;
-
+  final int totalDays;
+  final TransformationModel datas;
   @override
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () {
         Navigator.of(context).push(MaterialPageRoute(
           builder: (context) {
-            return const TransoOverView();
+            return TransoOverView(
+              data: datas,
+              totalDayCount: totalDays,
+            );
           },
         ));
       },
@@ -221,7 +178,7 @@ class TransfoCard extends StatelessWidget {
                     fontWeight: FontWeight.bold),
               ),
               Text(
-                "5 Days",
+                "$totalDays Days",
                 style: Constants.poppinsFont.copyWith(
                     color: Constants.scaffoldColor,
                     fontSize: 15,

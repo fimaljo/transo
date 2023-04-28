@@ -5,8 +5,10 @@ class CustomeHeader extends StatelessWidget {
   const CustomeHeader({
     super.key,
     required this.text,
+    required this.ontap,
   });
   final String text;
+  final VoidCallback ontap;
   @override
   Widget build(BuildContext context) {
     return Row(
@@ -40,8 +42,8 @@ class CustomeHeader extends StatelessWidget {
           decoration: BoxDecoration(
               color: const Color.fromARGB(41, 37, 149, 190),
               borderRadius: BorderRadius.circular(8)),
-          child: const Center(
-            child: Icon(Icons.more_horiz),
+          child: Center(
+            child: IconButton(onPressed: ontap, icon: Icon(Icons.more_horiz)),
           ),
         ),
       ],
