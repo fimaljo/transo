@@ -20,22 +20,12 @@ class _HomeScreenState extends State<HomeScreen> {
 //  late final LocalDB _crudStorage;
   @override
   void initState() {
-    // _crudStorage = LocalDB("db");
-    // _crudStorage.open();
     provider = Provider.of<TransoProvider>(context, listen: false);
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       provider.readData();
       provider.readDetailsData();
-
-      // provider.fetchBaseTableWithDetails();
     });
     super.initState();
-  }
-
-  @override
-  void dispose() {
-    // _crudStorage.close();
-    super.dispose();
   }
 
   @override

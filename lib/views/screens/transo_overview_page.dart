@@ -12,6 +12,7 @@ import 'package:provider/provider.dart';
 import 'package:transo/helpers/constents.dart';
 import 'package:transo/views/screens/create_trano_progress_screen.dart';
 import 'package:transo/views/screens/create_transo_screen.dart';
+import 'package:transo/views/screens/progress_slide_show.dart';
 import 'package:transo/views/widgets/custome_header.dart';
 
 import '../../models/transo_create_model.dart';
@@ -30,7 +31,7 @@ class TransoOverView extends StatefulWidget {
 class _TransoOverViewState extends State<TransoOverView> {
   late TransoProvider _provider;
   int _selectedButtonIndex = 0;
-
+  Timer? _timer; // add the timer variable
   final List<String> _buttonTextList = [
     'Tap to see the image',
     'Double tap to delete',
@@ -41,29 +42,29 @@ class _TransoOverViewState extends State<TransoOverView> {
   void initState() {
     _provider = Provider.of(context, listen: false);
     _controllerBottomCenter =
-        ConfettiController(duration: const Duration(seconds: 2));
+        ConfettiController(duration: const Duration(seconds: 3));
 
-    widget.totalDayCount == _provider.transoDetailsCreateListT.length
-        ? setState(() {
-            _controllerBottomCenter.play();
-          })
-        : null;
     // Start a timer to automatically switch to the next button
     if (mounted) {
-      Timer.periodic(const Duration(seconds: 2), (_) {
+      _timer = Timer.periodic(const Duration(seconds: 2), (_) {
         setState(() {
           _selectedButtonIndex =
               (_selectedButtonIndex + 1) % _buttonTextList.length;
         });
       });
     }
-
+    widget.totalDayCount == _provider.transoDetailsCreateListT.length
+        ? setState(() {
+            _controllerBottomCenter.play();
+          })
+        : null;
     super.initState();
   }
 
   @override
   void dispose() {
-    // TODO: implement dispose
+    _controllerBottomCenter.dispose();
+    _timer?.cancel(); // cancel the timer if it's not null
     super.dispose();
   }
 
@@ -108,22 +109,37 @@ class _TransoOverViewState extends State<TransoOverView> {
     }
 
     return Scaffold(
-      floatingActionButton: FloatingActionButton(
-        backgroundColor: Colors.orange,
-        onPressed: () {
-          Navigator.of(context).push(MaterialPageRoute(
-            builder: (context) {
-              return CreateTransoProgressScreen(
-                dayCount: data.transoDetailsCreateListT.length + 1,
-                trasoId: widget.data.id,
-              );
-            },
-          ));
-        },
-        child: const Center(
-          child: Icon(Icons.add),
-        ),
-      ).animate(delay: const Duration(seconds: 1)).moveY(),
+      floatingActionButton:
+          widget.totalDayCount != _provider.transoDetailsCreateListT.length
+              ? FloatingActionButton(
+                  backgroundColor: Colors.orange,
+                  onPressed: () {
+                    Navigator.of(context).push(MaterialPageRoute(
+                      builder: (context) {
+                        return CreateTransoProgressScreen(
+                          dayCount: data.transoDetailsCreateListT.length + 1,
+                          trasoId: widget.data.id,
+                        );
+                      },
+                    ));
+                  },
+                  child: const Center(
+                    child: Icon(Icons.add),
+                  ),
+                ).animate(delay: const Duration(seconds: 1)).moveY()
+              : FloatingActionButton(
+                  backgroundColor: const Color.fromARGB(126, 37, 150, 190),
+                  onPressed: () {
+                    Navigator.of(context).push(MaterialPageRoute(
+                      builder: (context) {
+                        return ProgressSlideShow();
+                      },
+                    ));
+                  },
+                  child: const Center(
+                    child: Icon(Icons.play_arrow_outlined),
+                  ),
+                ).animate(delay: const Duration(seconds: 1)).moveY(),
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.only(left: 15, right: 15, top: 30),
@@ -262,27 +278,54 @@ class _TransoOverViewState extends State<TransoOverView> {
                               color: Colors.transparent,
                               child: FlipCard(
                                 direction: FlipDirection.HORIZONTAL,
-                                front: Container(
-                                  margin: const EdgeInsets.only(right: 10),
-                                  height: 250,
-                                  width: 250,
-                                  decoration: BoxDecoration(
-                                      color: const Color.fromARGB(
-                                          126, 37, 150, 190),
-                                      borderRadius: BorderRadius.circular(20)),
-                                  child: Padding(
-                                    padding: const EdgeInsets.only(
-                                        top: 30.0, left: 20, right: 20),
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.center,
+                                front: Wrap(
+                                  children: [
+                                    Container(
+                                      margin: const EdgeInsets.only(right: 10),
+                                      height: 250,
+                                      width: 250,
+                                      decoration: BoxDecoration(
+                                          color: const Color.fromARGB(
+                                              126, 37, 150, 190),
+                                          borderRadius:
+                                              BorderRadius.circular(20)),
+                                      child: Padding(
+                                        padding: const EdgeInsets.only(
+                                            top: 30.0, left: 20, right: 20),
+                                        child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
                                           children: [
+                                            Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.center,
+                                              children: [
+                                                Text(
+                                                  "Day",
+                                                  style: Constants.poppinsFont
+                                                      .copyWith(
+                                                          color: Constants
+                                                              .scaffoldColor,
+                                                          fontSize: 15,
+                                                          fontWeight:
+                                                              FontWeight.bold),
+                                                ),
+                                                Constants.sizeW10,
+                                                Text(
+                                                  datas.day,
+                                                  style: Constants.poppinsFont
+                                                      .copyWith(
+                                                          color: Constants
+                                                              .scaffoldColor,
+                                                          fontSize: 15,
+                                                          fontWeight:
+                                                              FontWeight.bold),
+                                                ),
+                                              ],
+                                            ),
+                                            Constants.sizeH10,
                                             Text(
-                                              "Day",
+                                              "Target",
                                               style: Constants.poppinsFont
                                                   .copyWith(
                                                       color: Constants
@@ -291,9 +334,24 @@ class _TransoOverViewState extends State<TransoOverView> {
                                                       fontWeight:
                                                           FontWeight.bold),
                                             ),
-                                            Constants.sizeW10,
+                                            SizedBox(
+                                              height: 50,
+                                              width: 200,
+                                              child: Text(
+                                                widget.data.target,
+                                                maxLines: 2,
+                                                style: Constants.poppinsFont
+                                                    .copyWith(
+                                                  color:
+                                                      Constants.scaffoldColor,
+                                                  fontSize: 13,
+                                                  overflow:
+                                                      TextOverflow.ellipsis,
+                                                ),
+                                              ),
+                                            ),
                                             Text(
-                                              datas.day,
+                                              "Daily Status",
                                               style: Constants.poppinsFont
                                                   .copyWith(
                                                       color: Constants
@@ -302,85 +360,63 @@ class _TransoOverViewState extends State<TransoOverView> {
                                                       fontWeight:
                                                           FontWeight.bold),
                                             ),
+                                            SizedBox(
+                                              height: 50,
+                                              width: 200,
+                                              child: Text(
+                                                datas.currentStatus,
+                                                maxLines: 2,
+                                                style: Constants.poppinsFont
+                                                    .copyWith(
+                                                  color:
+                                                      Constants.scaffoldColor,
+                                                  fontSize: 13,
+                                                  overflow:
+                                                      TextOverflow.ellipsis,
+                                                ),
+                                              ),
+                                            ),
+                                            AnimatedSwitcher(
+                                                duration: const Duration(
+                                                    milliseconds: 500),
+                                                child: Padding(
+                                                  padding:
+                                                      const EdgeInsets.only(
+                                                          left: 10.0),
+                                                  child: Row(
+                                                    children: [
+                                                      const Icon(
+                                                        Icons
+                                                            .touch_app_outlined,
+                                                        color: Colors.white,
+                                                      ),
+                                                      Text(
+                                                        _buttonTextList[
+                                                            _selectedButtonIndex],
+                                                        key: ValueKey<int>(
+                                                            _selectedButtonIndex),
+                                                        style: Constants
+                                                            .poppinsFont
+                                                            .copyWith(
+                                                                color: Colors
+                                                                    .white,
+                                                                fontSize: 10,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .w200),
+                                                      )
+                                                    ],
+                                                  ),
+                                                )),
                                           ],
                                         ),
-                                        Constants.sizeH10,
-                                        Text(
-                                          "Target",
-                                          style: Constants.poppinsFont.copyWith(
-                                              color: Constants.scaffoldColor,
-                                              fontSize: 15,
-                                              fontWeight: FontWeight.bold),
-                                        ),
-                                        SizedBox(
-                                          height: 50,
-                                          width: 200,
-                                          child: Text(
-                                            widget.data.target,
-                                            maxLines: 2,
-                                            style:
-                                                Constants.poppinsFont.copyWith(
-                                              color: Constants.scaffoldColor,
-                                              fontSize: 13,
-                                              overflow: TextOverflow.ellipsis,
-                                            ),
-                                          ),
-                                        ),
-                                        Text(
-                                          "Daily Status",
-                                          style: Constants.poppinsFont.copyWith(
-                                              color: Constants.scaffoldColor,
-                                              fontSize: 15,
-                                              fontWeight: FontWeight.bold),
-                                        ),
-                                        SizedBox(
-                                          height: 50,
-                                          width: 200,
-                                          child: Text(
-                                            datas.currentStatus,
-                                            maxLines: 2,
-                                            style:
-                                                Constants.poppinsFont.copyWith(
-                                              color: Constants.scaffoldColor,
-                                              fontSize: 13,
-                                              overflow: TextOverflow.ellipsis,
-                                            ),
-                                          ),
-                                        ),
-                                        AnimatedSwitcher(
-                                            duration: const Duration(
-                                                milliseconds: 500),
-                                            child: Padding(
-                                              padding: const EdgeInsets.only(
-                                                  left: 10.0),
-                                              child: Row(
-                                                children: [
-                                                  const Icon(
-                                                    Icons.touch_app_outlined,
-                                                    color: Colors.white,
-                                                  ),
-                                                  Text(
-                                                    _buttonTextList[
-                                                        _selectedButtonIndex],
-                                                    key: ValueKey<int>(
-                                                        _selectedButtonIndex),
-                                                    style: Constants.poppinsFont
-                                                        .copyWith(
-                                                            color: Colors.white,
-                                                            fontSize: 10,
-                                                            fontWeight:
-                                                                FontWeight
-                                                                    .w200),
-                                                  )
-                                                ],
-                                              ),
-                                            )),
-                                      ],
-                                    ),
-                                  ),
-                                )
-                                    .animate(delay: const Duration(seconds: 1))
-                                    .moveY(),
+                                      ),
+                                    )
+                                        .animate(
+                                            delay: const Duration(seconds: 1))
+                                        .moveY(),
+                                  ],
+                                ),
                                 back: Container(
                                   margin: const EdgeInsets.only(right: 10),
                                   height: 250,
@@ -410,7 +446,7 @@ class _TransoOverViewState extends State<TransoOverView> {
                             autoPlay: false,
                             enlargeCenterPage: true,
                             viewportFraction: 0.6,
-                            aspectRatio: 1.4,
+                            aspectRatio: 1.3,
                             reverse: false,
                             enableInfiniteScroll: false
                             // initialPage: 0,
