@@ -32,6 +32,7 @@ class _TransoOverViewState extends State<TransoOverView> {
   late TransoProvider _provider;
   int _selectedButtonIndex = 0;
   Timer? _timer; // add the timer variable
+  final CarouselController _carouselController = CarouselController();
   final List<String> _buttonTextList = [
     'Tap to see the image',
     'Double tap to delete',
@@ -58,6 +59,10 @@ class _TransoOverViewState extends State<TransoOverView> {
             _controllerBottomCenter.play();
           })
         : null;
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _carouselController
+          .animateToPage(_provider.transoDetailsCreateListT.length - 1);
+    });
     super.initState();
   }
 
@@ -442,6 +447,7 @@ class _TransoOverViewState extends State<TransoOverView> {
                             ),
                           );
                         },
+                        carouselController: _carouselController,
                         options: CarouselOptions(
                             autoPlay: false,
                             enlargeCenterPage: true,
@@ -462,24 +468,29 @@ class _TransoOverViewState extends State<TransoOverView> {
                           .asMap()
                           .entries
                           .map(
-                            (e) => Container(
-                              margin:
-                                  const EdgeInsets.only(right: 6, bottom: 6),
-                              height: 30,
-                              width: 30,
-                              decoration: e.key <=
-                                      data.transoDetailsCreateListT.length - 1
-                                  ? BoxDecoration(
-                                      borderRadius: BorderRadius.circular(5),
-                                      color:
-                                          const Color.fromARGB(180, 2, 179, 8),
-                                    )
-                                  : BoxDecoration(
-                                      borderRadius: BorderRadius.circular(5),
-                                      color: Colors.grey[200],
-                                    ),
-                              child: Center(
-                                child: Text((e.key + 1).toString()),
+                            (e) => InkWell(
+                              onTap: () {
+                                _carouselController.animateToPage(e.key);
+                              },
+                              child: Container(
+                                margin:
+                                    const EdgeInsets.only(right: 6, bottom: 6),
+                                height: 30,
+                                width: 30,
+                                decoration: e.key <=
+                                        data.transoDetailsCreateListT.length - 1
+                                    ? BoxDecoration(
+                                        borderRadius: BorderRadius.circular(5),
+                                        color: const Color.fromARGB(
+                                            180, 2, 179, 8),
+                                      )
+                                    : BoxDecoration(
+                                        borderRadius: BorderRadius.circular(5),
+                                        color: Colors.grey[200],
+                                      ),
+                                child: Center(
+                                  child: Text((e.key + 1).toString()),
+                                ),
                               ),
                             ),
                           )
