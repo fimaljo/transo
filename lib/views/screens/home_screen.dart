@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
+import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:provider/provider.dart';
 import 'package:transo/helpers/constents.dart';
 import 'package:transo/models/transo_create_model.dart';
@@ -24,8 +25,14 @@ class _HomeScreenState extends State<HomeScreen> {
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       provider.readData();
       provider.readDetailsData();
+      initialize();
     });
     super.initState();
+  }
+
+  void initialize() async {
+    await Future.delayed(Duration(seconds: 1));
+    FlutterNativeSplash.remove();
   }
 
   @override
