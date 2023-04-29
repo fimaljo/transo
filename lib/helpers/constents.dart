@@ -55,6 +55,10 @@ class Constants {
   static const SizedBox sizeH10 = SizedBox(
     height: 10,
   );
+  static const SizedBox sizeW10 = SizedBox(
+    width: 10,
+  );
+
   /// The price for a single seat ticket
   static const double ticketPrice = 800;
 

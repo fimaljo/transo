@@ -6,10 +6,12 @@ class InputField extends StatelessWidget {
       {super.key,
       required this.heading,
       required this.hight,
-      required this.nameController});
+      required this.nameController,
+      this.radius = 20});
   final String heading;
   final double hight;
   final TextEditingController nameController;
+  final double radius;
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
@@ -34,7 +36,7 @@ class InputField extends StatelessWidget {
             padding: EdgeInsets.symmetric(horizontal: 24, vertical: 0),
             decoration: BoxDecoration(
                 border: Border.all(color: Colors.black),
-                borderRadius: BorderRadius.circular(29)),
+                borderRadius: BorderRadius.circular(radius)),
             child: TextFormField(
               controller: nameController,
               decoration: InputDecoration(

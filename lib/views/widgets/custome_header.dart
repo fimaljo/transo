@@ -2,13 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:transo/helpers/constents.dart';
 
 class CustomeHeader extends StatelessWidget {
-  const CustomeHeader({
-    super.key,
-    required this.text,
-    required this.ontap,
-  });
+  const CustomeHeader(
+      {super.key,
+      required this.text,
+      required this.ontap,
+      this.icon = Icons.more_horiz});
   final String text;
   final VoidCallback ontap;
+  final IconData icon;
   @override
   Widget build(BuildContext context) {
     return Row(
@@ -43,7 +44,7 @@ class CustomeHeader extends StatelessWidget {
               color: const Color.fromARGB(41, 37, 149, 190),
               borderRadius: BorderRadius.circular(8)),
           child: Center(
-            child: IconButton(onPressed: ontap, icon: Icon(Icons.more_horiz)),
+            child: IconButton(onPressed: ontap, icon: Icon(icon)),
           ),
         ),
       ],

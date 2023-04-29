@@ -7,8 +7,10 @@ class SqlHelper {
   static SqlHelper _instanse = SqlHelper._();
   static late Database database;
   static late Database detailsDatabase;
+  static late Database profileDatabase;
   static String tableName = "Transformation";
   static String secondTableName = "TransoDetails";
+  static String profileTableName = "ProfileDetails";
 
   //init
   static initDb() async {
@@ -28,6 +30,12 @@ class SqlHelper {
         onCreate: (Database db, int version) async {
       await db.execute(
           'CREATE TABLE $secondTableName ( ID INTEGER PRIMARY KEY AUTOINCREMENT, CURRENT_STATUS TEXT, DAY TEXT, IMAGE_PATH TEXT, TRANSO_ID INTEGER, FOREIGN KEY (TRANSO_ID) REFERENCES Transformation(ID) ON DELETE CASCADE )');
+    });
+
+    profileDatabase = await openDatabase(pathD, version: 1,
+        onCreate: (Database db, int version) async {
+      await db.execute(
+          'CREATE TABLE $profileDatabase ( ID INTEGER PRIMARY KEY AUTOINCREMENT, NAME TEXT, COMPLETED_COUNT TEXT, IMAGE_PATH TEXT)');
     });
   }
 
@@ -74,5 +82,20 @@ class SqlHelper {
     return await detailsDatabase.rawDelete(query);
   }
 
-  //inner join
+   //insert prpfile
+
+  static Future<int> insertProfiledata(String query) async {
+    return await profileDatabase.rawInsert(query);
+  }
+
+  //read profile data
+  static Future<List<Map<String, Object?>>> readProfileData(String query) async {
+    return await profileDatabase.rawQuery(query);
+  }
+
+  //update profile data
+  static Future<int> updateProfileData(String query) async {
+    return await profileDatabase.rawUpdate(query);
+  }
+
 }

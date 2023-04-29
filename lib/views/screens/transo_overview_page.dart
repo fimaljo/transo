@@ -49,14 +49,22 @@ class _TransoOverViewState extends State<TransoOverView> {
           })
         : null;
     // Start a timer to automatically switch to the next button
-    Timer.periodic(const Duration(seconds: 2), (_) {
-      setState(() {
-        _selectedButtonIndex =
-            (_selectedButtonIndex + 1) % _buttonTextList.length;
+    if (mounted) {
+      Timer.periodic(const Duration(seconds: 2), (_) {
+        setState(() {
+          _selectedButtonIndex =
+              (_selectedButtonIndex + 1) % _buttonTextList.length;
+        });
       });
-    });
+    }
 
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
   }
 
   @override
@@ -83,7 +91,6 @@ class _TransoOverViewState extends State<TransoOverView> {
                   child: const Text('Yes'),
                   onPressed: () {
                     data.deleteDetail(id);
-                    // _provider.readData();
                     _provider.readDetailsData();
                     Navigator.of(context).pop();
                   }),
@@ -145,6 +152,7 @@ class _TransoOverViewState extends State<TransoOverView> {
                     },
                   ));
                 },
+                icon: Icons.edit_note_outlined,
               ).animate(delay: const Duration(seconds: 1)).moveY(),
               Constants.sizeH30,
               Text(
@@ -240,9 +248,7 @@ class _TransoOverViewState extends State<TransoOverView> {
                               Navigator.of(context).push(MaterialPageRoute(
                                 builder: (context) {
                                   return CreateTransoProgressScreen(
-                                    dayCount:
-                                        data.transoDetailsCreateListT.length +
-                                            1,
+                                    dayCount: itemIndex + 1,
                                     trasoId: widget.data.id,
                                     id: datas.id,
                                   );
@@ -264,124 +270,113 @@ class _TransoOverViewState extends State<TransoOverView> {
                                       color: const Color.fromARGB(
                                           126, 37, 150, 190),
                                       borderRadius: BorderRadius.circular(20)),
-                                  child: Stack(
-                                    clipBehavior: Clip.none,
-                                    children: [
-                                      Positioned(
-                                          top: 30,
-                                          left: 10,
-                                          child: Padding(
-                                            padding: const EdgeInsets.all(8.0),
-                                            child: Column(
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
-                                              children: [
-                                                Text(
-                                                  "Day",
-                                                  style: Constants.poppinsFont
-                                                      .copyWith(
-                                                          color: Constants
-                                                              .scaffoldColor,
-                                                          fontSize: 12,
-                                                          fontWeight:
-                                                              FontWeight.w200),
-                                                ),
-                                                SizedBox(
-                                                  height: 20,
-                                                  width: 200,
-                                                  child: Text(
-                                                    datas.day,
-                                                    style: Constants.poppinsFont
-                                                        .copyWith(
+                                  child: Padding(
+                                    padding: const EdgeInsets.only(
+                                        top: 30.0, left: 20, right: 20),
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: [
+                                            Text(
+                                              "Day",
+                                              style: Constants.poppinsFont
+                                                  .copyWith(
                                                       color: Constants
                                                           .scaffoldColor,
-                                                      fontSize: 10,
-                                                    ),
-                                                  ),
-                                                ),
-                                                Text(
-                                                  "Target",
-                                                  style: Constants.poppinsFont
-                                                      .copyWith(
-                                                          color: Constants
-                                                              .scaffoldColor,
-                                                          fontSize: 12,
-                                                          fontWeight:
-                                                              FontWeight.w200),
-                                                ),
-                                                SizedBox(
-                                                  height: 50,
-                                                  width: 200,
-                                                  child: Text(
-                                                    widget.data.target,
-                                                    style: Constants.poppinsFont
-                                                        .copyWith(
-                                                      color: Constants
-                                                          .scaffoldColor,
-                                                      fontSize: 10,
-                                                    ),
-                                                  ),
-                                                ),
-                                                Text(
-                                                  "Daily Status",
-                                                  style: Constants.poppinsFont
-                                                      .copyWith(
-                                                          color: Constants
-                                                              .scaffoldColor,
-                                                          fontSize: 12,
-                                                          fontWeight:
-                                                              FontWeight.w200),
-                                                ),
-                                                SizedBox(
-                                                  height: 60,
-                                                  width: 200,
-                                                  child: Text(
-                                                    datas.currentStatus,
-                                                    style: Constants.poppinsFont
-                                                        .copyWith(
-                                                      color: Constants
-                                                          .scaffoldColor,
-                                                      fontSize: 10,
-                                                    ),
-                                                  ),
-                                                ),
-                                                AnimatedSwitcher(
-                                                    duration: const Duration(
-                                                        milliseconds: 500),
-                                                    child: Padding(
-                                                      padding:
-                                                          const EdgeInsets.only(
-                                                              left: 10.0),
-                                                      child: Row(
-                                                        children: [
-                                                          const Icon(
-                                                            Icons
-                                                                .touch_app_outlined,
-                                                            color: Colors.white,
-                                                          ),
-                                                          Text(
-                                                            _buttonTextList[
-                                                                _selectedButtonIndex],
-                                                            key: ValueKey<int>(
-                                                                _selectedButtonIndex),
-                                                            style: Constants
-                                                                .poppinsFont
-                                                                .copyWith(
-                                                                    color: Colors
-                                                                        .white,
-                                                                    fontSize:
-                                                                        10,
-                                                                    fontWeight:
-                                                                        FontWeight
-                                                                            .w200),
-                                                          )
-                                                        ],
-                                                      ),
-                                                    )),
-                                              ],
+                                                      fontSize: 15,
+                                                      fontWeight:
+                                                          FontWeight.bold),
                                             ),
-                                          )),
-                                    ],
+                                            Constants.sizeW10,
+                                            Text(
+                                              datas.day,
+                                              style: Constants.poppinsFont
+                                                  .copyWith(
+                                                      color: Constants
+                                                          .scaffoldColor,
+                                                      fontSize: 15,
+                                                      fontWeight:
+                                                          FontWeight.bold),
+                                            ),
+                                          ],
+                                        ),
+                                        Constants.sizeH10,
+                                        Text(
+                                          "Target",
+                                          style: Constants.poppinsFont.copyWith(
+                                              color: Constants.scaffoldColor,
+                                              fontSize: 15,
+                                              fontWeight: FontWeight.bold),
+                                        ),
+                                        SizedBox(
+                                          height: 50,
+                                          width: 200,
+                                          child: Text(
+                                            widget.data.target,
+                                            maxLines: 2,
+                                            style:
+                                                Constants.poppinsFont.copyWith(
+                                              color: Constants.scaffoldColor,
+                                              fontSize: 13,
+                                              overflow: TextOverflow.ellipsis,
+                                            ),
+                                          ),
+                                        ),
+                                        Text(
+                                          "Daily Status",
+                                          style: Constants.poppinsFont.copyWith(
+                                              color: Constants.scaffoldColor,
+                                              fontSize: 15,
+                                              fontWeight: FontWeight.bold),
+                                        ),
+                                        SizedBox(
+                                          height: 50,
+                                          width: 200,
+                                          child: Text(
+                                            datas.currentStatus,
+                                            maxLines: 2,
+                                            style:
+                                                Constants.poppinsFont.copyWith(
+                                              color: Constants.scaffoldColor,
+                                              fontSize: 13,
+                                              overflow: TextOverflow.ellipsis,
+                                            ),
+                                          ),
+                                        ),
+                                        AnimatedSwitcher(
+                                            duration: const Duration(
+                                                milliseconds: 500),
+                                            child: Padding(
+                                              padding: const EdgeInsets.only(
+                                                  left: 10.0),
+                                              child: Row(
+                                                children: [
+                                                  const Icon(
+                                                    Icons.touch_app_outlined,
+                                                    color: Colors.white,
+                                                  ),
+                                                  Text(
+                                                    _buttonTextList[
+                                                        _selectedButtonIndex],
+                                                    key: ValueKey<int>(
+                                                        _selectedButtonIndex),
+                                                    style: Constants.poppinsFont
+                                                        .copyWith(
+                                                            color: Colors.white,
+                                                            fontSize: 10,
+                                                            fontWeight:
+                                                                FontWeight
+                                                                    .w200),
+                                                  )
+                                                ],
+                                              ),
+                                            )),
+                                      ],
+                                    ),
                                   ),
                                 )
                                     .animate(delay: const Duration(seconds: 1))
@@ -466,7 +461,7 @@ class _TransoOverViewState extends State<TransoOverView> {
               ).animate(delay: const Duration(seconds: 1)).moveY(),
               SizedBox(
                 height: 60,
-                width: 200,
+                width: size.width,
                 child: Text(
                   widget.data.currentStatus,
                   style: Constants.poppinsFont.copyWith(

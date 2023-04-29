@@ -96,6 +96,7 @@ class _CreateTransoScreenState extends State<CreateTransoScreen> {
                       nameController: _titleController,
                       heading: "Title",
                       hight: 50,
+                      radius: 10,
                     ),
                     InputField(
                       nameController: _targetController,
@@ -111,6 +112,7 @@ class _CreateTransoScreenState extends State<CreateTransoScreen> {
                       nameController: _totalDaysController,
                       heading: "Total Days",
                       hight: 50,
+                      radius: 10,
                     ),
                     widget.id == null
                         ? ElevatedButton(

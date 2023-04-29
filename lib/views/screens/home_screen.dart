@@ -5,6 +5,7 @@ import 'package:transo/helpers/constents.dart';
 import 'package:transo/models/transo_create_model.dart';
 import 'package:transo/provider/local_db_provider.dart';
 import 'package:transo/views/screens/create_transo_screen.dart';
+import 'package:transo/views/screens/profile_screen.dart';
 import 'package:transo/views/screens/transo_overview_page.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -49,20 +50,20 @@ class _HomeScreenState extends State<HomeScreen> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const CustomeAppBar()
-                  .animate(delay: Duration(milliseconds: 20))
-                  .move(),
+                  .animate(delay: Duration(milliseconds: 220))
+                  .slideY(),
               Constants.sizeH30,
-              textWish().animate(delay: Duration(seconds: 1)).move(),
+              textWish().animate(delay: Duration(milliseconds: 300)).slideX(),
               Text(
                 "Ready for a Transoformation ?",
                 style: Constants.poppinsFont.copyWith(
                     color: const Color.fromARGB(126, 20, 20, 20),
                     fontSize: 16,
                     fontWeight: FontWeight.w100),
-              ).animate().move(),
+              ).animate(delay: Duration(milliseconds: 400)).slideX(),
               CreateTransfoWidget(size: size)
-                  .animate(delay: Duration(seconds: 1))
-                  .moveY(),
+                  .animate(delay: Duration(milliseconds: 500))
+                  .slideY(),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -72,7 +73,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         color: Constants.scaffoldColor,
                         fontSize: 15,
                         fontWeight: FontWeight.bold),
-                  ).animate().scaleY(),
+                  ).animate().move(),
                   IconButton(
                       onPressed: () {},
                       icon: const Icon(Icons.keyboard_arrow_right))
@@ -349,10 +350,20 @@ class CustomeAppBar extends StatelessWidget {
             child: Icon(Icons.more_horiz),
           ),
         ),
-        const CircleAvatar(
-          foregroundImage:
-              NetworkImage("https://pbs.twimg.com/media/FjU2lkcWYAgNG6d.jpg"),
-          radius: 30,
+        InkWell(
+          onTap: () {
+            Navigator.of(context).push(MaterialPageRoute(
+              builder: (context) => ProfileScreen(),
+            ));
+          },
+          child: Hero(
+            tag: "profile",
+            child: const CircleAvatar(
+              foregroundImage: NetworkImage(
+                  "https://pbs.twimg.com/media/FjU2lkcWYAgNG6d.jpg"),
+              radius: 30,
+            ),
+          ),
         )
       ],
     );
