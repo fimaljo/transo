@@ -1,8 +1,5 @@
 import 'dart:io';
-import 'dart:math';
-import 'dart:typed_data';
 
-import 'package:confetti/confetti.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
@@ -110,7 +107,7 @@ class _CreateTransoProgressScreenState
     return Scaffold(
       body: SingleChildScrollView(
         child: Padding(
-          padding: const EdgeInsets.only(left: 15, right: 15, top: 30),
+          padding: const EdgeInsets.only(left: 15, right: 15, top: 50),
           child: Column(
             children: [
             

@@ -3,26 +3,21 @@ import 'dart:math';
 import 'package:flutter/foundation.dart';
 
 import 'package:transo/helpers/sql_helper.dart';
+import 'package:transo/models/profile_model.dart';
 
-import '../models/joined_model.dart';
 import '../models/transo_create_model.dart';
 import '../models/transo_details_create_model.dart';
 
 class TransoProvider with ChangeNotifier {
   List<TransformationModel> transoCreateList = [];
   List<TransoCreateDetailsModel> transoDetailsCreateList = [];
-  List<BaseTableWithDetails> baseTableWithDetails = [];
+
   List<TransoCreateDetailsModel> transoDetailsCreateListT = [];
+  List<ProfileModel> transoProfileList = [];
   var isLoading = false;
   setIsLoading(bool status) {
     isLoading = status;
     notifyListeners();
-  }
-
-  void getDetails(int id) {
-    final result =
-        transoDetailsCreateList.where((item) => item.transoId == id).toList();
-    transoDetailsCreateListT = result;
   }
 
   readData() async {
@@ -55,13 +50,15 @@ class TransoProvider with ChangeNotifier {
     // print(result);
     log(result);
   }
- delete(int id) async {
+
+  delete(int id) async {
     setIsLoading(true);
     String query = "delete from ${SqlHelper.tableName} where id='$id'";
     int result = await SqlHelper.deleteData(query);
     print(result);
     setIsLoading(false);
   }
+
   ///
 
   insertDeatilsData(
@@ -106,5 +103,56 @@ class TransoProvider with ChangeNotifier {
     int result = await SqlHelper.updateDetailsData(query);
     // print(result);
     log(result);
+  }
+
+  void getDetails(int id) {
+    final result =
+        transoDetailsCreateList.where((item) => item.transoId == id).toList();
+    transoDetailsCreateListT = result;
+  }
+
+  // profile operation
+
+  readProfileData() async {
+    setIsLoading(true);
+
+    List<Map<String, dynamic>> data = await SqlHelper.readProfileData(
+        "select * from ${SqlHelper.profileTableName}");
+
+    for (Map<String, dynamic> element in data) {
+      transoProfileList.add(ProfileModel.fromJson(element));
+    }
+    notifyListeners();
+    setIsLoading(false);
+  }
+
+  insertProfileData(
+    String name,
+    String completedCount,
+    String imagePath,
+  ) async {
+    String query =
+        "insert into ${SqlHelper.profileTableName}(NAME,COMPLETED_COUNT,IMAGE_PATH ) values('$name','$completedCount','$imagePath')";
+    int result = await SqlHelper.insertProfiledata(query);
+    print(result);
+    log(result);
+  }
+
+  updateProfileData(
+    String name,
+    String completedCount,
+    String imagePath,
+  ) async {
+    String query =
+        "update ${SqlHelper.profileTableName} set NAME='$name',COMPLETED_COUNT='$completedCount',IMAGE_PATH='$imagePath'";
+    int result = await SqlHelper.updateData(query);
+    // print(result);
+    log(result);
+  }
+
+  addIntialDatasToProile() {
+    final ProfileModel data =
+        ProfileModel(id: 1, name: "Budd", completedCount: "0", imagePath: "");
+    transoProfileList.add(data);
   }
 }

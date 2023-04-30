@@ -25,13 +25,15 @@ class _HomeScreenState extends State<HomeScreen> {
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       provider.readData();
       provider.readDetailsData();
+      provider.readProfileData();
+      provider.addIntialDatasToProile();
       initialize();
     });
     super.initState();
   }
 
   void initialize() async {
-    await Future.delayed(Duration(seconds: 1));
+    await Future.delayed(Duration(milliseconds: 500));
     FlutterNativeSplash.remove();
   }
 
@@ -42,7 +44,7 @@ class _HomeScreenState extends State<HomeScreen> {
     return Scaffold(
       body: SingleChildScrollView(
         child: Padding(
-          padding: const EdgeInsets.only(left: 15, right: 15, top: 30),
+          padding: const EdgeInsets.only(left: 15, right: 15, top: 50),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [

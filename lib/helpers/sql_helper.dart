@@ -1,7 +1,5 @@
 import 'package:sqflite/sqflite.dart';
 
-import '../models/joined_model.dart';
-
 class SqlHelper {
   SqlHelper._();
   static SqlHelper _instanse = SqlHelper._();
@@ -16,27 +14,32 @@ class SqlHelper {
   static initDb() async {
     var databasesPath = await getDatabasesPath();
 
-    String path = '$databasesPath/dbName';
+    try {
+      String path = '$databasesPath/transformationDB';
 
-    database = await openDatabase(path, version: 1,
-        onCreate: (Database db, int version) async {
-      await db.execute(
-          'CREATE TABLE $tableName ( ID INTEGER PRIMARY KEY AUTOINCREMENT, TITLE TEXT,  TARGET TEXT, CURRENT_STATUS TEXT, TOTAL_DAYS TEXT)');
-    });
+      database = await openDatabase(path, version: 1,
+          onCreate: (Database db, int version) async {
+        await db.execute(
+            'CREATE TABLE $tableName ( ID INTEGER PRIMARY KEY AUTOINCREMENT, TITLE TEXT,  TARGET TEXT, CURRENT_STATUS TEXT, TOTAL_DAYS TEXT)');
+      });
 
-    String pathD = '$databasesPath/dbNam';
+      String pathD = '$databasesPath/detailsDB';
 
-    detailsDatabase = await openDatabase(pathD, version: 1,
-        onCreate: (Database db, int version) async {
-      await db.execute(
-          'CREATE TABLE $secondTableName ( ID INTEGER PRIMARY KEY AUTOINCREMENT, CURRENT_STATUS TEXT, DAY TEXT, IMAGE_PATH TEXT, TRANSO_ID INTEGER, FOREIGN KEY (TRANSO_ID) REFERENCES Transformation(ID) ON DELETE CASCADE )');
-    });
-
-    profileDatabase = await openDatabase(pathD, version: 1,
-        onCreate: (Database db, int version) async {
-      await db.execute(
-          'CREATE TABLE $profileDatabase ( ID INTEGER PRIMARY KEY AUTOINCREMENT, NAME TEXT, COMPLETED_COUNT TEXT, IMAGE_PATH TEXT)');
-    });
+      detailsDatabase = await openDatabase(pathD, version: 1,
+          onCreate: (Database db, int version) async {
+        await db.execute(
+            'CREATE TABLE $secondTableName ( ID INTEGER PRIMARY KEY AUTOINCREMENT, CURRENT_STATUS TEXT, DAY TEXT, IMAGE_PATH TEXT, TRANSO_ID INTEGER, FOREIGN KEY (TRANSO_ID) REFERENCES Transformation(ID) ON DELETE CASCADE )');
+      });
+      String pathP = '$databasesPath/profileDB';
+      profileDatabase = await openDatabase(pathP, version: 1,
+          onCreate: (Database db, int version) async {
+        await db.execute(
+            'CREATE TABLE $profileTableName ( ID INTEGER PRIMARY KEY AUTOINCREMENT, NAME TEXT, COMPLETED_COUNT TEXT, IMAGE_PATH TEXT)');
+      });
+    } catch (e) {
+      print("Table error check here");
+      print(e);
+    }
   }
 
   //insert
@@ -82,14 +85,15 @@ class SqlHelper {
     return await detailsDatabase.rawDelete(query);
   }
 
-   //insert prpfile
+  //insert profile
 
   static Future<int> insertProfiledata(String query) async {
     return await profileDatabase.rawInsert(query);
   }
 
   //read profile data
-  static Future<List<Map<String, Object?>>> readProfileData(String query) async {
+  static Future<List<Map<String, Object?>>> readProfileData(
+      String query) async {
     return await profileDatabase.rawQuery(query);
   }
 
@@ -97,5 +101,4 @@ class SqlHelper {
   static Future<int> updateProfileData(String query) async {
     return await profileDatabase.rawUpdate(query);
   }
-
 }

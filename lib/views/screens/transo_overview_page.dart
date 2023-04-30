@@ -147,7 +147,7 @@ class _TransoOverViewState extends State<TransoOverView> {
                 ).animate(delay: const Duration(seconds: 1)).moveY(),
       body: SingleChildScrollView(
         child: Padding(
-          padding: const EdgeInsets.only(left: 15, right: 15, top: 30),
+          padding: const EdgeInsets.only(left: 15, right: 15, top: 50),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -387,7 +387,7 @@ class _TransoOverViewState extends State<TransoOverView> {
                                                 child: Padding(
                                                   padding:
                                                       const EdgeInsets.only(
-                                                          left: 10.0),
+                                                          left: 1.0),
                                                   child: Row(
                                                     children: [
                                                       const Icon(
@@ -405,10 +405,10 @@ class _TransoOverViewState extends State<TransoOverView> {
                                                             .copyWith(
                                                                 color: Colors
                                                                     .white,
-                                                                fontSize: 10,
+                                                                fontSize: 11,
                                                                 fontWeight:
                                                                     FontWeight
-                                                                        .w200),
+                                                                        .bold),
                                                       )
                                                     ],
                                                   ),
