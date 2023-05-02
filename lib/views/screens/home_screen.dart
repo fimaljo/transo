@@ -1,5 +1,4 @@
 import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
@@ -7,10 +6,13 @@ import 'package:provider/provider.dart';
 import 'package:transo/helpers/constents.dart';
 import 'package:transo/models/transo_create_model.dart';
 import 'package:transo/provider/local_db_provider.dart';
-
 import 'package:transo/views/screens/create_transo_screen.dart';
 import 'package:transo/views/screens/profile_screen.dart';
 import 'package:transo/views/screens/transo_overview_page.dart';
+
+import '../widgets/creat_transo_button.dart';
+import '../widgets/custom_app_bar.dart';
+import '../widgets/transo_card.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -105,7 +107,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               Image.asset(
                                 "assets/images/cloud.png",
                                 height: 200,
-                                // width: 50,
+                               
                               ),
                               Text(
                                 "Create Your Transformation",
@@ -137,7 +139,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             TransformationModel datas =
                                 providerForList.transoCreateList[index];
 
-                            return TransfoCard(
+                            return TransoCard(
                               color: color,
                               title: datas.title,
                               totalDays: int.parse(datas.totalDays),
@@ -173,228 +175,6 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 }
 
-class TransfoCard extends StatelessWidget {
-  const TransfoCard({
-    super.key,
-    required this.title,
-    required this.totalDays,
-    required this.datas,
-    required this.color,
-    required this.assetImage,
-  });
-  final String title;
-  final int totalDays;
-  final TransformationModel datas;
-  final Color color;
-  final String assetImage;
-  @override
-  Widget build(BuildContext context) {
-    final provider = Provider.of<TransoProvider>(context, listen: true);
-    return InkWell(
-      onTap: () {
-        Navigator.of(context).push(MaterialPageRoute(
-          builder: (context) {
-            return TransoOverView(
-              data: datas,
-              totalDayCount: totalDays,
-            );
-          },
-        ));
-      },
-      child: Container(
-        margin: const EdgeInsets.only(bottom: 20),
-        height: 100,
-        width: 200,
-        decoration: BoxDecoration(
-          color: Colors.transparent,
-          borderRadius: const BorderRadius.all(Radius.circular(20)),
-          border: Border.all(
-            color: const Color.fromARGB(53, 0, 0, 0),
-          ),
-        ),
-        child: Padding(
-          padding: const EdgeInsets.only(
-            right: 15.0,
-          ),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Container(
-                  height: 90,
-                  width: 80,
-                  decoration: BoxDecoration(
-                      borderRadius: const BorderRadius.all(Radius.circular(20)),
-                      color: color),
-                  child: Center(
-                    child: Image.asset(
-                      assetImage,
-                      height: 50,
-                    ),
-                  ),
-                ),
-              ),
-              SizedBox(
-                width: 100,
-                height: 20,
-                child: Text(
-                  title,
-                  style: Constants.poppinsFont.copyWith(
-                      color: Constants.scaffoldColor,
-                      fontSize: 15,
-                      fontWeight: FontWeight.bold,
-                      overflow: TextOverflow.ellipsis),
-                ),
-              ),
-              Text(
-                "$totalDays Days",
-                style: Constants.poppinsFont.copyWith(
-                    color: Constants.scaffoldColor,
-                    fontSize: 15,
-                    fontWeight: FontWeight.bold),
-              ),
-              IconButton(
-                  onPressed: () {
-                    provider.delete(datas.id);
-                    provider.readData();
-                    provider.readDetailsData();
-                  },
-                  icon: const Icon(Icons.delete_outlined))
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-}
 
-class CreateTransfoWidget extends StatelessWidget {
-  const CreateTransfoWidget({
-    super.key,
-    required this.size,
-  });
 
-  final Size size;
 
-  @override
-  Widget build(BuildContext context) {
-    return InkWell(
-      onTap: () {
-        Navigator.of(context).push(MaterialPageRoute(
-          builder: (context) {
-            return const CreateTransoScreen();
-          },
-        ));
-      },
-      child: Padding(
-        padding:
-            const EdgeInsets.only(left: 8.0, right: 8.0, top: 20, bottom: 20),
-        child: Container(
-          height: 100,
-          width: size.width / 0.5,
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(30),
-            color: const Color.fromARGB(126, 37, 150, 190),
-          ),
-          child: Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                CircleAvatar(
-                  backgroundColor: Colors.black,
-                  child: Center(
-                    child: Image.asset(
-                      "assets/icons/target (1).png",
-                      height: 20,
-                      color: Colors.white,
-                    ),
-                  ),
-                ),
-                RichText(
-                  text: TextSpan(
-                    style: Constants.poppinsFont.copyWith(
-                        color: Constants.scaffoldColor,
-                        fontSize: 12,
-                        fontWeight: FontWeight.w100),
-                    children: const [
-                      TextSpan(
-                        text: 'Create\n',
-                      ),
-                      TextSpan(text: 'New  Transformation  Here 🔥'),
-                    ],
-                  ),
-                ),
-                Container(
-                  height: 50,
-                  width: 50,
-                  decoration: BoxDecoration(
-                      color: const Color.fromARGB(41, 37, 149, 190),
-                      borderRadius: BorderRadius.circular(8)),
-                  child: Center(
-                    child: Image.asset(
-                      "assets/icons/right-arrow.png",
-                      height: 30,
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-class CustomeAppBar extends StatelessWidget {
-  const CustomeAppBar({
-    super.key,
-    required this.provider,
-    required this.imagePath,
-  });
-  final TransoProvider provider;
-  final String imagePath;
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        Container(
-          height: 50,
-          width: 50,
-          decoration: BoxDecoration(
-              color: const Color.fromARGB(41, 37, 149, 190),
-              borderRadius: BorderRadius.circular(8)),
-          child: const Center(
-            child: Icon(Icons.more_horiz),
-          ),
-        ),
-        InkWell(
-          onTap: () {
-            Navigator.of(context).push(MaterialPageRoute(
-              builder: (context) => const ProfileScreen(),
-            ));
-          },
-          child: provider.transoProfileList.length != 1
-              ? Hero(
-                  tag: "profile",
-                  child: CircleAvatar(
-                    foregroundImage: FileImage(File(imagePath)),
-                    radius: 30,
-                  ),
-                )
-              : const Hero(
-                  tag: "profile",
-                  child: CircleAvatar(
-                    foregroundImage: AssetImage("assets/images/proPic.jpg"),
-                    radius: 30,
-                  ),
-                ),
-        )
-      ],
-    );
-  }
-}
