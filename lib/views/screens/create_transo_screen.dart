@@ -1,16 +1,12 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:provider/provider.dart';
-import 'package:sqflite/sqflite.dart';
 import 'package:transo/models/transo_create_model.dart';
 import 'package:transo/provider/local_db_provider.dart';
 import 'package:transo/views/widgets/input_field.dart';
 
 import '../../helpers/constents.dart';
-import '../../helpers/sql_helper.dart';
 import '../widgets/custome_header.dart';
 
 class CreateTransoScreen extends StatefulWidget {
@@ -53,6 +49,7 @@ class _CreateTransoScreenState extends State<CreateTransoScreen> {
     await _provider.insertData(_titleController.text, _targetController.text,
         _statusController.text, _totalDaysController.text);
     await _provider.readData();
+    if (!mounted) return;
     Navigator.pop(context);
   }
 
@@ -60,6 +57,7 @@ class _CreateTransoScreenState extends State<CreateTransoScreen> {
     await _provider.updateData(_titleController.text, _targetController.text,
         _statusController.text, _totalDaysController.text, widget.id!);
     await _provider.readData();
+    if (!mounted) return;
     Navigator.pop(context);
   }
 
@@ -131,7 +129,7 @@ class _CreateTransoScreenState extends State<CreateTransoScreen> {
                           ? ElevatedButton(
                               style: ElevatedButton.styleFrom(
                                 backgroundColor:
-                                    Color.fromARGB(126, 37, 150, 190),
+                                    const Color.fromARGB(126, 37, 150, 190),
                                 fixedSize: Size(size.width * 0.4, 50),
                               ),
                               onPressed: () {

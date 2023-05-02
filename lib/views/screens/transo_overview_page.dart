@@ -85,7 +85,7 @@ class _TransoOverViewState extends State<TransoOverView> {
     }
 
     data.getDetails(widget.data.id);
-    _selectDelete(BuildContext parentContext, int id) async {
+    selectDelete(BuildContext parentContext, int id) async {
       return showDialog(
         context: parentContext,
         builder: (BuildContext context) {
@@ -137,7 +137,7 @@ class _TransoOverViewState extends State<TransoOverView> {
                   onPressed: () {
                     Navigator.of(context).push(MaterialPageRoute(
                       builder: (context) {
-                        return ProgressSlideShow();
+                        return const ProgressSlideShow();
                       },
                     ));
                   },
@@ -263,7 +263,7 @@ class _TransoOverViewState extends State<TransoOverView> {
                               data.transoDetailsCreateListT[itemIndex];
                           return InkWell(
                             onDoubleTap: () {
-                              _selectDelete(context, datas.id);
+                              selectDelete(context, datas.id);
                             },
                             onLongPress: () {
                               Navigator.of(context).push(MaterialPageRoute(

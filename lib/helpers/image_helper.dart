@@ -3,10 +3,10 @@ import 'dart:developer';
 import 'package:image_picker/image_picker.dart';
 
 pickImage(ImageSource source) async {
-  final ImagePicker _imagePicker = ImagePicker();
-  final _file = await _imagePicker.pickImage(source: source);
-  if (_file != null) {
-    return await _file.path;
+  final ImagePicker imagePicker = ImagePicker();
+  final file = await imagePicker.pickImage(source: source);
+  if (file != null) {
+    return file.path;
   }
   log('No image selected');
 }

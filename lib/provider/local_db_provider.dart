@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:flutter/foundation.dart';
 
 import 'package:transo/helpers/sql_helper.dart';
@@ -14,52 +12,39 @@ class TransoProvider with ChangeNotifier {
 
   List<TransoCreateDetailsModel> transoDetailsCreateListT = [];
   List<ProfileModel> transoProfileList = [];
-  var isLoading = false;
-  setIsLoading(bool status) {
-    isLoading = status;
-    notifyListeners();
-  }
-
+// read data from tranasfromartion table
   readData() async {
-    setIsLoading(true);
     transoCreateList = [];
-    List<Map<String, dynamic>> data =
-        await SqlHelper.readData("select * from ${SqlHelper.tableName}");
-    // print(data);
+    List<Map<String, dynamic>> data = await SqlHelper.readData(
+        "select * from ${SqlHelper.transformationTable}");
+
     for (Map<String, dynamic> element in data) {
       transoCreateList.add(TransformationModel.fromJson(element));
     }
     notifyListeners();
-    setIsLoading(false);
   }
-
+// insert data from tranasfromartion table
   insertData(
       String title, String target, String status, String totalDays) async {
     String query =
-        "insert into ${SqlHelper.tableName}(title,target,CURRENT_STATUS,total_days ) values('$title','$target','$status','$totalDays')";
-    int result = await SqlHelper.insertdata(query);
-    // print(result);
-    log(result);
+        "insert into ${SqlHelper.transformationTable}(title,target,CURRENT_STATUS,total_days ) values('$title','$target','$status','$totalDays')";
+    await SqlHelper.insertdata(query);
   }
-
+// updateData from tranasfromartion table
   updateData(String title, String target, String status, String totalDays,
       int id) async {
     String query =
-        "update ${SqlHelper.tableName} set title='$title',target='$target',CURRENT_STATUS='$status',total_days='$totalDays' where id='$id'";
-    int result = await SqlHelper.updateData(query);
-    // print(result);
-    log(result);
+        "update ${SqlHelper.transformationTable} set title='$title',target='$target',CURRENT_STATUS='$status',total_days='$totalDays' where id='$id'";
+    await SqlHelper.updateData(query);
   }
-
+//  delete data from tranasfromartion table
   delete(int id) async {
-    setIsLoading(true);
-    String query = "delete from ${SqlHelper.tableName} where id='$id'";
-    int result = await SqlHelper.deleteData(query);
-    print(result);
-    setIsLoading(false);
+    String query =
+        "delete from ${SqlHelper.transformationTable} where id='$id'";
+    await SqlHelper.deleteData(query);
   }
 
-  ///
+//  insert data from tranasfromartionDetails table
 
   insertDeatilsData(
     String status,
@@ -68,41 +53,33 @@ class TransoProvider with ChangeNotifier {
     int transoId,
   ) async {
     String query =
-        "insert into ${SqlHelper.secondTableName}(CURRENT_STATUS,DAY,IMAGE_PATH,TRANSO_ID ) values('$status','$day','$imagePath','$transoId')";
-    int result = await SqlHelper.insertDetailsdata(query);
-    // print(result);
-    log(result);
+        "insert into ${SqlHelper.transformationDetailsTable}(CURRENT_STATUS,DAY,IMAGE_PATH,TRANSO_ID ) values('$status','$day','$imagePath','$transoId')";
+    await SqlHelper.insertDetailsdata(query);
   }
 
-//
+//  insert read from tranasfromartionDetails table
   readDetailsData() async {
-    //setIsLoading(true);
+    
     transoDetailsCreateList = [];
     List<Map<String, dynamic>> data = await SqlHelper.readDetailsData(
-        "select * from ${SqlHelper.secondTableName}");
-    // print(data);
+        "select * from ${SqlHelper.transformationDetailsTable}");
+
     for (Map<String, dynamic> element in data) {
       transoDetailsCreateList.add(TransoCreateDetailsModel.fromJson(element));
     }
-    // notifyListeners();
-    // setIsLoading(false);
   }
 //delete details data
 
   deleteDetail(int id) async {
-    setIsLoading(true);
-    String query = "delete from ${SqlHelper.secondTableName} where id='$id'";
-    int result = await SqlHelper.deleteDetailsData(query);
-    print(result);
-    setIsLoading(false);
+    String query =
+        "delete from ${SqlHelper.transformationDetailsTable} where id='$id'";
+    await SqlHelper.deleteDetailsData(query);
   }
 
   updateDetailsData(String status, String path, int id) async {
     String query =
-        "update ${SqlHelper.secondTableName} set CURRENT_STATUS='$status',IMAGE_PATH='$path' where id='$id'";
-    int result = await SqlHelper.updateDetailsData(query);
-    // print(result);
-    log(result);
+        "update ${SqlHelper.transformationDetailsTable} set CURRENT_STATUS='$status',IMAGE_PATH='$path' where id='$id'";
+    await SqlHelper.updateDetailsData(query);
   }
 
   void getDetails(int id) {
@@ -114,8 +91,6 @@ class TransoProvider with ChangeNotifier {
   // profile operation
 
   readProfileData() async {
-    setIsLoading(true);
-
     List<Map<String, dynamic>> data = await SqlHelper.readProfileData(
         "select * from ${SqlHelper.profileTableName}");
 
@@ -123,7 +98,6 @@ class TransoProvider with ChangeNotifier {
       transoProfileList.add(ProfileModel.fromJson(element));
     }
     notifyListeners();
-    setIsLoading(false);
   }
 
   insertProfileData(
@@ -133,9 +107,7 @@ class TransoProvider with ChangeNotifier {
   ) async {
     String query =
         "insert into ${SqlHelper.profileTableName}(NAME,COMPLETED_COUNT,IMAGE_PATH ) values('$name','$completedCount','$imagePath')";
-    int result = await SqlHelper.insertProfiledata(query);
-    print(result);
-    log(result);
+    await SqlHelper.insertProfiledata(query);
   }
 
   updateProfileData(
@@ -146,12 +118,8 @@ class TransoProvider with ChangeNotifier {
     try {
       String query =
           "update ${SqlHelper.profileTableName} set NAME='$name',COMPLETED_COUNT='$completedCount',IMAGE_PATH='$imagePath'";
-      int result = await SqlHelper.updateProfileData(query);
-      print(result);
-      log(result);
-    } catch (e) {
-      print(e);
-    }
+    await SqlHelper.updateProfileData(query);
+    } catch (_) {}
   }
 
   addIntialDatasToProfile() {

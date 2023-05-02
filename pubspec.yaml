@@ -35,12 +35,14 @@ dependencies:
   flutter:
     sdk: flutter
   flutter_animate: ^4.1.1+1
+
   flutter_native_splash: ^2.2.19
   google_fonts: ^4.0.3
   image_picker: ^0.8.7+4
   path_provider: ^2.0.14
   provider: ^6.0.5
   sqflite: ^2.2.7
+
 dev_dependencies:
   flutter_lints: ^2.0.0
   flutter_test:

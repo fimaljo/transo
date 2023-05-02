@@ -7,6 +7,7 @@ import 'package:provider/provider.dart';
 import 'package:transo/helpers/constents.dart';
 import 'package:transo/models/transo_create_model.dart';
 import 'package:transo/provider/local_db_provider.dart';
+
 import 'package:transo/views/screens/create_transo_screen.dart';
 import 'package:transo/views/screens/profile_screen.dart';
 import 'package:transo/views/screens/transo_overview_page.dart';
@@ -20,7 +21,6 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   late TransoProvider provider;
-//  late final LocalDB _crudStorage;
   @override
   void initState() {
     provider = Provider.of<TransoProvider>(context, listen: false);
@@ -28,9 +28,8 @@ class _HomeScreenState extends State<HomeScreen> {
       provider.readData();
       provider.readDetailsData();
       provider.readProfileData();
-      provider.transoProfileList.isEmpty
-          ? provider.addIntialDatasToProfile()
-          : null;
+      provider.addIntialDatasToProfile();
+
       initialize();
     });
     super.initState();
@@ -46,12 +45,12 @@ class _HomeScreenState extends State<HomeScreen> {
     Size size = MediaQuery.of(context).size;
     final providerForList = Provider.of<TransoProvider>(context, listen: true);
 
-    String names =
-        provider.transoProfileList.map((profile) => profile.name).last;
-    String imagePaths =
-        provider.transoProfileList.map((profile) => profile.imagePath).last;
+    List<String> names =
+        provider.transoProfileList.map((profile) => profile.name).toList();
+    List<String> imagePaths =
+        provider.transoProfileList.map((profile) => profile.imagePath).toList();
     if (provider.transoProfileList.isEmpty) {
-      return Text('Buddy');
+      return const Text('Buddy');
     }
 
     return Scaffold(
@@ -61,12 +60,12 @@ class _HomeScreenState extends State<HomeScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              CustomeAppBar(provider: provider, imagePath: imagePaths)
-                  .animate(delay: Duration(milliseconds: 220))
+              CustomeAppBar(provider: provider, imagePath: imagePaths.last)
+                  .animate(delay: const Duration(milliseconds: 220))
                   .slideY(),
               Constants.sizeH30,
-              textWish(names)
-                  .animate(delay: Duration(milliseconds: 300))
+              textWish(names.last)
+                  .animate(delay: const Duration(milliseconds: 300))
                   .slideX(),
               Text(
                 "Ready for a Transoformation ?",
@@ -74,9 +73,9 @@ class _HomeScreenState extends State<HomeScreen> {
                     color: const Color.fromARGB(126, 20, 20, 20),
                     fontSize: 16,
                     fontWeight: FontWeight.w100),
-              ).animate(delay: Duration(milliseconds: 400)).slideX(),
+              ).animate(delay: const Duration(milliseconds: 400)).slideX(),
               CreateTransfoWidget(size: size)
-                  .animate(delay: Duration(milliseconds: 500))
+                  .animate(delay: const Duration(milliseconds: 500))
                   .slideY(),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -119,14 +118,14 @@ class _HomeScreenState extends State<HomeScreen> {
                           ),
                         )
                       : ListView.builder(
-                          physics: NeverScrollableScrollPhysics(),
+                          physics: const NeverScrollableScrollPhysics(),
                           shrinkWrap: true,
                           itemCount: providerForList.transoCreateList.length,
                           itemBuilder: (context, index) {
                             Color color;
                             String image;
                             if (index % 2 == 0) {
-                              color = Color.fromARGB(115, 255, 153, 0);
+                              color = const Color.fromARGB(115, 255, 153, 0);
                             } else {
                               color = const Color.fromARGB(41, 37, 149, 190);
                             }
@@ -144,7 +143,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               totalDays: int.parse(datas.totalDays),
                               datas: datas,
                               assetImage: image,
-                            ).animate(delay: Duration(seconds: 1)).moveY();
+                            ).animate(delay: const Duration(seconds: 1)).moveY();
                           },
                         ),
                 ),
@@ -164,7 +163,7 @@ class _HomeScreenState extends State<HomeScreen> {
             fontSize: 36,
             fontWeight: FontWeight.w300),
         children: <TextSpan>[
-          TextSpan(
+          const TextSpan(
             text: 'Hello',
           ),
           TextSpan(text: ' $name'),
@@ -261,7 +260,7 @@ class TransfoCard extends StatelessWidget {
                     provider.readData();
                     provider.readDetailsData();
                   },
-                  icon: Icon(Icons.delete_outlined))
+                  icon: const Icon(Icons.delete_outlined))
             ],
           ),
         ),
@@ -376,7 +375,7 @@ class CustomeAppBar extends StatelessWidget {
         InkWell(
           onTap: () {
             Navigator.of(context).push(MaterialPageRoute(
-              builder: (context) => ProfileScreen(),
+              builder: (context) => const ProfileScreen(),
             ));
           },
           child: provider.transoProfileList.length != 1
@@ -387,7 +386,7 @@ class CustomeAppBar extends StatelessWidget {
                     radius: 30,
                   ),
                 )
-              : Hero(
+              : const Hero(
                   tag: "profile",
                   child: CircleAvatar(
                     foregroundImage: AssetImage("assets/images/proPic.jpg"),

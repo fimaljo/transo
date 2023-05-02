@@ -10,7 +10,8 @@ class InputField extends StatefulWidget {
     required this.nameController,
     this.radius = 20,
     required this.validationMessage,
-    this.keyboardType, this.inputFormatters,
+    this.keyboardType,
+    this.inputFormatters,
   }) : super(key: key);
 
   final String heading;
@@ -21,7 +22,7 @@ class InputField extends StatefulWidget {
   final TextInputType? keyboardType;
   final List<TextInputFormatter>? inputFormatters;
   @override
-  _InputFieldState createState() => _InputFieldState();
+  State<InputField> createState() => _InputFieldState();
 }
 
 class _InputFieldState extends State<InputField> {
@@ -49,18 +50,18 @@ class _InputFieldState extends State<InputField> {
               fontWeight: FontWeight.bold,
             ),
           ),
-          SizedBox(height: 10),
+          Constants.sizeH10,
           Container(
             height: widget.height,
             width: size.width * 0.8,
-            padding: EdgeInsets.symmetric(horizontal: 24, vertical: 0),
+            padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 0),
             decoration: BoxDecoration(
               border: Border.all(color: Colors.black),
               borderRadius: BorderRadius.circular(widget.radius),
             ),
             child: TextFormField(
               controller: widget.nameController,
-              decoration: InputDecoration(
+              decoration: const InputDecoration(
                 border: InputBorder.none,
               ),
               keyboardType: widget.keyboardType,
@@ -75,7 +76,7 @@ class _InputFieldState extends State<InputField> {
           if (_isValidationError)
             Text(
               widget.validationMessage,
-              style: TextStyle(color: Colors.red),
+              style: const TextStyle(color: Colors.red),
             ),
         ],
       ),

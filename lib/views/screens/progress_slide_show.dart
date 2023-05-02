@@ -29,7 +29,7 @@ class ProgressSlideShow extends StatelessWidget {
             ));
       },
       options: CarouselOptions(
-          autoPlayInterval: Duration(milliseconds: 1000),
+          autoPlayInterval: const Duration(milliseconds: 1000),
           aspectRatio: aspectRatio,
           autoPlay: true,
           reverse: false,

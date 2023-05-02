@@ -91,13 +91,13 @@ class _CreateTransoProgressScreenState
   saveData(String path) async {
     await _provider.insertDeatilsData(_statusController.text,
         widget.dayCount.toString(), path, widget.trasoId);
-    // await _provider.readData();
+    if (!mounted) return;
     Navigator.pop(context);
   }
 
   updateData(String path) async {
     await _provider.updateDetailsData(_statusController.text, path, widget.id!);
-    // await _provider.readData();
+   if (!mounted) return;
     Navigator.pop(context);
   }
 
@@ -245,7 +245,7 @@ class _CreateTransoProgressScreenState
                 widget.id == null
                     ? ElevatedButton(
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: Color.fromARGB(126, 37, 150, 190),
+                          backgroundColor: const Color.fromARGB(126, 37, 150, 190),
                           fixedSize: Size(size.width * 0.4, 50),
                         ),
                         onPressed: () {
@@ -268,7 +268,7 @@ class _CreateTransoProgressScreenState
                       )
                     : ElevatedButton(
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: Color.fromARGB(126, 37, 150, 190),
+                          backgroundColor: const Color.fromARGB(126, 37, 150, 190),
                           fixedSize: Size(size.width * 0.4, 50),
                         ),
                         onPressed: () {

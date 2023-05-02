@@ -2,8 +2,6 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter/src/widgets/framework.dart';
-import 'package:flutter/src/widgets/placeholder.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 
@@ -46,13 +44,13 @@ class _EditProfileState extends State<EditProfile> {
 
   saveProfile(String path, String name, String count) async {
     await _provider.insertProfileData(name, count, path);
-
+    if (!mounted) return;
     Navigator.pop(context);
   }
 
   updateProfile(String path, String name, String count) async {
     await _provider.updateProfileData(name, count, path);
-
+    if (!mounted) return;
     Navigator.pop(context);
   }
 
@@ -113,7 +111,7 @@ class _EditProfileState extends State<EditProfile> {
               Hero(
                 tag: "profile",
                 child: CircleAvatar(
-                  backgroundImage: AssetImage("assets/images/proPic.jpg"),
+                  backgroundImage: const AssetImage("assets/images/proPic.jpg"),
                   foregroundImage: FileImage(File(_file ?? widget.imagePath)),
                   radius: 60,
                 ),
@@ -122,7 +120,7 @@ class _EditProfileState extends State<EditProfile> {
                   onPressed: () {
                     _selectImage(context);
                   },
-                  child: Icon(
+                  child: const Icon(
                     Icons.edit_note_outlined,
                     color: Colors.black,
                   )),

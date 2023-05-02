@@ -2,13 +2,11 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 import 'package:transo/helpers/constents.dart';
 import 'package:transo/views/screens/edit_profile_screen.dart';
 import 'package:transo/views/widgets/custome_header.dart';
 
-import '../../helpers/image_helper.dart';
 import '../../provider/local_db_provider.dart';
 
 class ProfileScreen extends StatelessWidget {
@@ -60,7 +58,7 @@ class ProfileScreen extends StatelessWidget {
                         radius: 60,
                       ),
                     )
-                  : Hero(
+                  : const Hero(
                       tag: "profile",
                       child: CircleAvatar(
                         foregroundImage: AssetImage("assets/images/proPic.jpg"),
@@ -74,7 +72,7 @@ class ProfileScreen extends StatelessWidget {
                     color: Colors.black,
                     fontSize: 16,
                     fontWeight: FontWeight.w100),
-              ).animate(delay: Duration(milliseconds: 200)).slideX(),
+              ).animate(delay: const Duration(milliseconds: 200)).slideX(),
               Constants.sizeH50,
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -87,7 +85,7 @@ class ProfileScreen extends StatelessWidget {
                             color: Colors.black,
                             fontSize: 16,
                             fontWeight: FontWeight.w100),
-                      ).animate(delay: Duration(milliseconds: 200)).slideX(),
+                      ).animate(delay: const Duration(milliseconds: 200)).slideX(),
                       Container(
                         height: 150,
                         width: 150,
@@ -102,7 +100,7 @@ class ProfileScreen extends StatelessWidget {
                                 fontSize: 50,
                                 fontWeight: FontWeight.bold),
                           )
-                              .animate(delay: Duration(milliseconds: 200))
+                              .animate(delay: const Duration(milliseconds: 200))
                               .slideX(),
                         ),
                       ),
@@ -117,7 +115,7 @@ class ProfileScreen extends StatelessWidget {
                             color: Colors.black,
                             fontSize: 16,
                             fontWeight: FontWeight.w100),
-                      ).animate(delay: Duration(milliseconds: 200)).slideX(),
+                      ).animate(delay: const Duration(milliseconds: 200)).slideX(),
                       Container(
                         height: 150,
                         width: 150,
@@ -132,7 +130,7 @@ class ProfileScreen extends StatelessWidget {
                                 fontSize: 50,
                                 fontWeight: FontWeight.bold),
                           )
-                              .animate(delay: Duration(milliseconds: 200))
+                              .animate(delay: const Duration(milliseconds: 200))
                               .slideX(),
                         ),
                       ),
@@ -150,7 +148,7 @@ class ProfileScreen extends StatelessWidget {
                         color: Colors.black,
                         fontSize: 16,
                         fontWeight: FontWeight.w100),
-                  ).animate(delay: Duration(milliseconds: 200)).slideX(),
+                  ).animate(delay: const Duration(milliseconds: 200)).slideX(),
                   Container(
                     height: 150,
                     width: 310,
@@ -164,7 +162,7 @@ class ProfileScreen extends StatelessWidget {
                             color: Colors.black,
                             fontSize: 50,
                             fontWeight: FontWeight.bold),
-                      ).animate(delay: Duration(milliseconds: 200)).slideX(),
+                      ).animate(delay: const Duration(milliseconds: 200)).slideX(),
                     ),
                   ),
                 ],

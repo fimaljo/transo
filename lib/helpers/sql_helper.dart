@@ -2,12 +2,12 @@ import 'package:sqflite/sqflite.dart';
 
 class SqlHelper {
   SqlHelper._();
-  static SqlHelper _instanse = SqlHelper._();
+ 
   static late Database database;
   static late Database detailsDatabase;
   static late Database profileDatabase;
-  static String tableName = "Transformation";
-  static String secondTableName = "TransoDetails";
+  static String transformationTable = "Transformation";
+  static String transformationDetailsTable = "TransoDetails";
   static String profileTableName = "ProfileDetails";
 
   //init
@@ -20,7 +20,7 @@ class SqlHelper {
       database = await openDatabase(path, version: 1,
           onCreate: (Database db, int version) async {
         await db.execute(
-            'CREATE TABLE $tableName ( ID INTEGER PRIMARY KEY AUTOINCREMENT, TITLE TEXT,  TARGET TEXT, CURRENT_STATUS TEXT, TOTAL_DAYS TEXT)');
+            'CREATE TABLE $transformationTable ( ID INTEGER PRIMARY KEY AUTOINCREMENT, TITLE TEXT,  TARGET TEXT, CURRENT_STATUS TEXT, TOTAL_DAYS TEXT)');
       });
 
       String pathD = '$databasesPath/detailsDB';
@@ -28,7 +28,7 @@ class SqlHelper {
       detailsDatabase = await openDatabase(pathD, version: 1,
           onCreate: (Database db, int version) async {
         await db.execute(
-            'CREATE TABLE $secondTableName ( ID INTEGER PRIMARY KEY AUTOINCREMENT, CURRENT_STATUS TEXT, DAY TEXT, IMAGE_PATH TEXT, TRANSO_ID INTEGER, FOREIGN KEY (TRANSO_ID) REFERENCES Transformation(ID) ON DELETE CASCADE )');
+            'CREATE TABLE $transformationDetailsTable ( ID INTEGER PRIMARY KEY AUTOINCREMENT, CURRENT_STATUS TEXT, DAY TEXT, IMAGE_PATH TEXT, TRANSO_ID INTEGER, FOREIGN KEY (TRANSO_ID) REFERENCES Transformation(ID) ON DELETE CASCADE )');
       });
       String pathP = '$databasesPath/profileDB';
       profileDatabase = await openDatabase(pathP, version: 1,
@@ -36,10 +36,7 @@ class SqlHelper {
         await db.execute(
             'CREATE TABLE $profileTableName ( ID INTEGER PRIMARY KEY AUTOINCREMENT, NAME TEXT, COMPLETED_COUNT TEXT, IMAGE_PATH TEXT)');
       });
-    } catch (e) {
-      print("Table error check here");
-      print(e);
-    }
+    } catch (_) {}
   }
 
   //insert
