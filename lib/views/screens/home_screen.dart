@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
@@ -26,14 +28,16 @@ class _HomeScreenState extends State<HomeScreen> {
       provider.readData();
       provider.readDetailsData();
       provider.readProfileData();
-      provider.addIntialDatasToProile();
+      provider.transoProfileList.isEmpty
+          ? provider.addIntialDatasToProfile()
+          : null;
       initialize();
     });
     super.initState();
   }
 
   void initialize() async {
-    await Future.delayed(Duration(milliseconds: 500));
+    await Future.delayed(const Duration(milliseconds: 500));
     FlutterNativeSplash.remove();
   }
 
@@ -41,6 +45,15 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
     final providerForList = Provider.of<TransoProvider>(context, listen: true);
+
+    String names =
+        provider.transoProfileList.map((profile) => profile.name).last;
+    String imagePaths =
+        provider.transoProfileList.map((profile) => profile.imagePath).last;
+    if (provider.transoProfileList.isEmpty) {
+      return Text('Buddy');
+    }
+
     return Scaffold(
       body: SingleChildScrollView(
         child: Padding(
@@ -48,11 +61,13 @@ class _HomeScreenState extends State<HomeScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const CustomeAppBar()
+              CustomeAppBar(provider: provider, imagePath: imagePaths)
                   .animate(delay: Duration(milliseconds: 220))
                   .slideY(),
               Constants.sizeH30,
-              textWish().animate(delay: Duration(milliseconds: 300)).slideX(),
+              textWish(names)
+                  .animate(delay: Duration(milliseconds: 300))
+                  .slideX(),
               Text(
                 "Ready for a Transoformation ?",
                 style: Constants.poppinsFont.copyWith(
@@ -141,18 +156,18 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  RichText textWish() {
+  RichText textWish(String name) {
     return RichText(
       text: TextSpan(
         style: Constants.poppinsFont.copyWith(
             color: Constants.scaffoldColor,
             fontSize: 36,
             fontWeight: FontWeight.w100),
-        children: const <TextSpan>[
+        children: <TextSpan>[
           TextSpan(
             text: 'Hello',
           ),
-          TextSpan(text: ' Buddy'),
+          TextSpan(text: ' $name'),
         ],
       ),
     );
@@ -332,7 +347,11 @@ class CreateTransfoWidget extends StatelessWidget {
 class CustomeAppBar extends StatelessWidget {
   const CustomeAppBar({
     super.key,
+    required this.provider,
+    required this.imagePath,
   });
+  final TransoProvider provider;
+  final String imagePath;
 
   @override
   Widget build(BuildContext context) {
@@ -355,14 +374,21 @@ class CustomeAppBar extends StatelessWidget {
               builder: (context) => ProfileScreen(),
             ));
           },
-          child: Hero(
-            tag: "profile",
-            child: const CircleAvatar(
-              foregroundImage: NetworkImage(
-                  "https://pbs.twimg.com/media/FjU2lkcWYAgNG6d.jpg"),
-              radius: 30,
-            ),
-          ),
+          child: provider.transoProfileList.length != 1
+              ? Hero(
+                  tag: "profile",
+                  child: CircleAvatar(
+                    foregroundImage: FileImage(File(imagePath)),
+                    radius: 30,
+                  ),
+                )
+              : Hero(
+                  tag: "profile",
+                  child: CircleAvatar(
+                    foregroundImage: AssetImage("assets/images/proPic.jpg"),
+                    radius: 30,
+                  ),
+                ),
         )
       ],
     );

@@ -143,16 +143,20 @@ class TransoProvider with ChangeNotifier {
     String completedCount,
     String imagePath,
   ) async {
-    String query =
-        "update ${SqlHelper.profileTableName} set NAME='$name',COMPLETED_COUNT='$completedCount',IMAGE_PATH='$imagePath'";
-    int result = await SqlHelper.updateData(query);
-    // print(result);
-    log(result);
+    try {
+      String query =
+          "update ${SqlHelper.profileTableName} set NAME='$name',COMPLETED_COUNT='$completedCount',IMAGE_PATH='$imagePath'";
+      int result = await SqlHelper.updateProfileData(query);
+      print(result);
+      log(result);
+    } catch (e) {
+      print(e);
+    }
   }
 
-  addIntialDatasToProile() {
+  addIntialDatasToProfile() {
     final ProfileModel data =
-        ProfileModel(id: 1, name: "Budd", completedCount: "0", imagePath: "");
+        ProfileModel(id: 1, name: "Buddy", completedCount: "0", imagePath: "B");
     transoProfileList.add(data);
   }
 }

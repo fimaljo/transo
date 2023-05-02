@@ -13,8 +13,18 @@ import '../widgets/custome_header.dart';
 import '../widgets/input_field.dart';
 
 class EditProfile extends StatefulWidget {
-  const EditProfile({super.key, required this.id});
+  const EditProfile({
+    super.key,
+    required this.id,
+    required this.name,
+    required this.completedCount,
+    required this.imagePath,
+  });
   final int? id;
+  final String name;
+  final String completedCount;
+  final String imagePath;
+
   @override
   State<EditProfile> createState() => _EditProfileState();
 }
@@ -28,35 +38,45 @@ class _EditProfileState extends State<EditProfile> {
   void initState() {
     super.initState();
     _provider = Provider.of(context, listen: false);
-    if (widget.id == null) {
-      nameController = TextEditingController();
-      countController = TextEditingController();
-    }
-    nameController =
-        TextEditingController(text: _provider.transoProfileList[0].name);
-    countController = TextEditingController(
-        text: _provider.transoProfileList[0].completedCount);
-    _file = _provider.transoProfileList[0].imagePath;
+
+    nameController = TextEditingController(text: widget.name);
+    countController = TextEditingController(text: widget.completedCount);
   }
 
-  saveProfile(String path) async {
-    await _provider.insertProfileData(
-        nameController.text, countController.text, path);
+  saveProfile(String path, String name, String count) async {
+    await _provider.insertProfileData(name, count, path);
 
     Navigator.pop(context);
   }
 
-  updateProfile(BuildContext parentContext) async {
+  updateProfile(String path, String name, String count) async {
+    await _provider.updateProfileData(name, count, path);
+
+    Navigator.pop(context);
+  }
+
+  _selectImage(BuildContext parentContext) async {
     return showDialog(
       context: parentContext,
       builder: (BuildContext context) {
         return SimpleDialog(
-          title: const Text('Update Your Profile'),
+          title: const Text('Add Your logo'),
           children: <Widget>[
             SimpleDialogOption(
                 padding: const EdgeInsets.all(20),
-                child: const Text('Press to upload Profile Photo'),
+                child: const Text('Take a photo'),
                 onPressed: () async {
+                  Navigator.pop(context);
+                  String file = await pickImage(ImageSource.camera);
+                  setState(() {
+                    _file = file;
+                  });
+                }),
+            SimpleDialogOption(
+                padding: const EdgeInsets.all(20),
+                child: const Text('Choose from Gallery'),
+                onPressed: () async {
+                  Navigator.of(context).pop();
                   String file = await pickImage(ImageSource.gallery);
                   setState(() {
                     _file = file;
@@ -66,10 +86,9 @@ class _EditProfileState extends State<EditProfile> {
               padding: const EdgeInsets.all(20),
               child: const Text("Cancel"),
               onPressed: () {
-                saveProfile(_file ?? "");
                 Navigator.pop(context);
               },
-            ),
+            )
           ],
         );
       },
@@ -80,71 +99,87 @@ class _EditProfileState extends State<EditProfile> {
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
     return Scaffold(
-      body: Padding(
-        padding: const EdgeInsets.only(left: 15, right: 15, top: 50),
-        child: Column(
-          children: [
-            CustomeHeader(
-              text: "Edit Profile",
-              ontap: () {},
-            ),
-            Constants.sizeH50,
-            Hero(
-              tag: "profile",
-              child: CircleAvatar(
-                foregroundImage: FileImage(File(_file == null
-                    ? _provider.transoProfileList[0].imagePath
-                    : _file!)),
-                radius: 60,
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.only(left: 15, right: 15, top: 50),
+          child: Column(
+            children: [
+              CustomeHeader(
+                text: "Edit Profile",
+                ontap: () {},
               ),
-            ),
-            InputField(
-              nameController: nameController,
-              heading: "Name",
-              hight: 50,
-              radius: 10,
-            ),
-            InputField(
-              nameController: countController,
-              heading: "Completed Count",
-              hight: 50,
-              radius: 10,
-            ),
-            widget.id == null
-                ? ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Color.fromARGB(126, 37, 150, 190),
-                      fixedSize: Size(size.width * 0.4, 50),
+              Constants.sizeH50,
+              Hero(
+                tag: "profile",
+                child: CircleAvatar(
+                  backgroundImage: AssetImage("assets/images/proPic.jpg"),
+                  foregroundImage: FileImage(File(_file ?? widget.imagePath)),
+                  radius: 60,
+                ),
+              ),
+              TextButton(
+                  onPressed: () {
+                    _selectImage(context);
+                  },
+                  child: Icon(
+                    Icons.edit_note_outlined,
+                    color: Colors.black,
+                  )),
+              InputField(
+                nameController: nameController,
+                heading: "Name",
+                hight: 50,
+                radius: 10,
+              ),
+              InputField(
+                nameController: countController,
+                heading: "Completed Count",
+                hight: 50,
+                radius: 10,
+              ),
+              _provider.transoProfileList.length == 1
+                  ? ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor:
+                            const Color.fromARGB(126, 37, 150, 190),
+                        fixedSize: Size(size.width * 0.4, 50),
+                      ),
+                      onPressed: () {
+                        saveProfile(_file ?? "", nameController.text,
+                            countController.text);
+                        _provider.readProfileData();
+                        Navigator.pop(context);
+                      },
+                      child: Text(
+                        'Create',
+                        style: Constants.poppinsFont.copyWith(
+                            color: Colors.white,
+                            fontSize: 15,
+                            fontWeight: FontWeight.bold),
+                      ),
+                    )
+                  : ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor:
+                            const Color.fromARGB(126, 37, 150, 190),
+                        fixedSize: Size(size.width * 0.4, 50),
+                      ),
+                      onPressed: () {
+                        updateProfile(_file ?? widget.imagePath,
+                            nameController.text, countController.text);
+                        _provider.readProfileData();
+                        Navigator.pop(context);
+                      },
+                      child: Text(
+                        'Updates',
+                        style: Constants.poppinsFont.copyWith(
+                            color: Colors.white,
+                            fontSize: 15,
+                            fontWeight: FontWeight.bold),
+                      ),
                     ),
-                    onPressed: () {
-                      saveProfile(_file!);
-                    },
-                    child: Text(
-                      'Create',
-                      style: Constants.poppinsFont.copyWith(
-                          color: Colors.white,
-                          fontSize: 15,
-                          fontWeight: FontWeight.bold),
-                    ),
-                  )
-                : ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color.fromARGB(126, 37, 150, 190),
-                      fixedSize: Size(size.width * 0.4, 50),
-                    ),
-                    onPressed: () {
-                     // updateData();
-                      Navigator.pop(context);
-                    },
-                    child: Text(
-                      'Update',
-                      style: Constants.poppinsFont.copyWith(
-                          color: Colors.white,
-                          fontSize: 15,
-                          fontWeight: FontWeight.bold),
-                    ),
-                  ),
-          ],
+            ],
+          ),
         ),
       ),
     );
