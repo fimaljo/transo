@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:provider/provider.dart';
 import 'package:sqflite/sqflite.dart';
@@ -71,6 +72,8 @@ class _CreateTransoScreenState extends State<CreateTransoScreen> {
     super.dispose();
   }
 
+  final _formKey = GlobalKey<FormState>();
+
   // Database? _db;
 
   @override
@@ -80,82 +83,107 @@ class _CreateTransoScreenState extends State<CreateTransoScreen> {
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.only(left: 15, right: 15, top: 50),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              CustomeHeader(
-                text: "Create",
-                ontap: () {},
-              ),
-              Constants.sizeH30,
-              Padding(
-                padding: const EdgeInsets.only(left: 20, right: 15, top: 30),
-                child: Column(
-                  children: [
-                    InputField(
-                      nameController: _titleController,
-                      heading: "Title",
-                      hight: 50,
-                      radius: 10,
-                    ),
-                    InputField(
-                      nameController: _targetController,
-                      heading: "Vision or Target",
-                      hight: 150,
-                    ),
-                    InputField(
-                      nameController: _statusController,
-                      heading: "Current Status",
-                      hight: 150,
-                    ),
-                    InputField(
-                      nameController: _totalDaysController,
-                      heading: "Total Days",
-                      hight: 50,
-                      radius: 10,
-                    ),
-                    widget.id == null
-                        ? ElevatedButton(
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor:
-                                  Color.fromARGB(126, 37, 150, 190),
-                              fixedSize: Size(size.width * 0.4, 50),
-                            ),
-                            onPressed: () {
-                              saveData();
-                            },
-                            child: Text(
-                              'Create',
-                              style: Constants.poppinsFont.copyWith(
-                                  color: Colors.white,
-                                  fontSize: 15,
-                                  fontWeight: FontWeight.bold),
-                            ),
-                          )
-                        : ElevatedButton(
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor:
-                                  const Color.fromARGB(126, 37, 150, 190),
-                              fixedSize: Size(size.width * 0.4, 50),
-                            ),
-                            onPressed: () {
-                              updateData();
-                              Navigator.pop(context);
-                            },
-                            child: Text(
-                              'Update',
-                              style: Constants.poppinsFont.copyWith(
-                                  color: Colors.white,
-                                  fontSize: 15,
-                                  fontWeight: FontWeight.bold),
-                            ),
-                          ),
-                    Constants.sizeH30,
-                  ],
+          child: Form(
+            key: _formKey,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                CustomeHeader(
+                  text: "Create",
+                  ontap: () {},
                 ),
-              ),
-            ],
-          ).animate().move(),
+                Constants.sizeH30,
+                Padding(
+                  padding: const EdgeInsets.only(left: 20, right: 15, top: 30),
+                  child: Column(
+                    children: [
+                      InputField(
+                        nameController: _titleController,
+                        heading: "Title",
+                        height: 50,
+                        radius: 10,
+                        validationMessage: "Enter title",
+                      ),
+                      InputField(
+                        nameController: _targetController,
+                        heading: "Vision or Target",
+                        height: 150,
+                        validationMessage: "Enter Target",
+                      ),
+                      InputField(
+                        nameController: _statusController,
+                        heading: "Current Status",
+                        height: 150,
+                        validationMessage: "Enter Current Status",
+                      ),
+                      InputField(
+                        nameController: _totalDaysController,
+                        heading: "Total Days",
+                        height: 50,
+                        radius: 10,
+                        validationMessage: "Enter Total Days",
+                        keyboardType: TextInputType.number,
+                        inputFormatters: [
+                          FilteringTextInputFormatter.digitsOnly
+                        ],
+                      ),
+                      widget.id == null
+                          ? ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor:
+                                    Color.fromARGB(126, 37, 150, 190),
+                                fixedSize: Size(size.width * 0.4, 50),
+                              ),
+                              onPressed: () {
+                                if (_titleController.text.isNotEmpty &&
+                                    _statusController.text.isNotEmpty &&
+                                    _targetController.text.isNotEmpty &&
+                                    _totalDaysController.text.isNotEmpty) {
+                                  saveData();
+                                } else {
+                                  Constants.showSnackBar("Fill All Data");
+                                }
+                              },
+                              child: Text(
+                                'Create',
+                                style: Constants.poppinsFont.copyWith(
+                                    color: Colors.white,
+                                    fontSize: 15,
+                                    fontWeight: FontWeight.bold),
+                              ),
+                            )
+                          : ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor:
+                                    const Color.fromARGB(126, 37, 150, 190),
+                                fixedSize: Size(size.width * 0.4, 50),
+                              ),
+                              onPressed: () {
+                                if (_titleController.text.isNotEmpty &&
+                                    _statusController.text.isNotEmpty &&
+                                    _targetController.text.isNotEmpty &&
+                                    _totalDaysController.text.isNotEmpty) {
+                                  updateData();
+                                  Navigator.pop(context);
+                                } else {
+                                  Constants.showSnackBar("Fill All Data");
+                                }
+                              },
+                              child: Text(
+                                'Update',
+                                style: Constants.poppinsFont.copyWith(
+                                    color: Colors.white,
+                                    fontSize: 15,
+                                    fontWeight: FontWeight.bold),
+                              ),
+                            ),
+                      Constants.sizeH30,
+                    ],
+                  ),
+                ),
+              ],
+            ).animate().move(),
+          ),
         ),
       ),
     );

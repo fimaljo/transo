@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
 import 'package:image_picker/image_picker.dart';
@@ -128,14 +129,18 @@ class _EditProfileState extends State<EditProfile> {
               InputField(
                 nameController: nameController,
                 heading: "Name",
-                hight: 50,
+                height: 50,
                 radius: 10,
+                validationMessage: "Enter Name",
               ),
               InputField(
                 nameController: countController,
                 heading: "Completed Count",
-                hight: 50,
+                height: 50,
                 radius: 10,
+                validationMessage: "Enter Completed Count",
+                keyboardType: TextInputType.number,
+                inputFormatters: [FilteringTextInputFormatter.digitsOnly],
               ),
               _provider.transoProfileList.length == 1
                   ? ElevatedButton(

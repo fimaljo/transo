@@ -31,7 +31,7 @@ class _CreateTransoProgressScreenState
   @override
   void initState() {
     super.initState();
-   
+
     _provider = Provider.of(context, listen: false);
 
     if (widget.id == null) {
@@ -101,6 +101,7 @@ class _CreateTransoProgressScreenState
     Navigator.pop(context);
   }
 
+  final _formKey = GlobalKey<FormState>();
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
@@ -108,87 +109,46 @@ class _CreateTransoProgressScreenState
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.only(left: 15, right: 15, top: 50),
-          child: Column(
-            children: [
-            
-              CustomeHeader(
-                text: "Day ${widget.dayCount}",
-                ontap: () {},
-              ),
-              Constants.sizeH30,
-              Align(
-                alignment: Alignment.center,
-                child: Container(
-                    margin: const EdgeInsets.only(right: 10),
-                    height: 330,
-                    width: 220,
-                    decoration: BoxDecoration(
-                      color: const Color.fromARGB(126, 37, 150, 190),
-                      borderRadius: BorderRadius.circular(20),
-                    ),
-                    child: _file == null
-                        ? widget.id == null
-                            ? Padding(
-                                padding: const EdgeInsets.all(15.0),
-                                child: Column(
-                                  children: [
-                                    RichText(
-                                      text: TextSpan(
-                                        style: Constants.poppinsFont.copyWith(
-                                            color: Constants.scaffoldColor,
-                                            fontSize: 32,
-                                            fontWeight: FontWeight.w100),
-                                        children: const <TextSpan>[
-                                          TextSpan(
-                                            text: 'Add Your Progress ',
-                                          ),
-                                          TextSpan(text: 'Image Here Buddy'),
-                                        ],
-                                      ),
-                                    ),
-                                    Constants.sizeH30,
-                                    InkWell(
-                                      onTap: () {
-                                        _selectImage(context);
-                                      },
-                                      child: Container(
-                                        height: 60,
-                                        width: 80,
-                                        decoration: BoxDecoration(
-                                          shape: BoxShape.circle,
-                                          border:
-                                              Border.all(color: Colors.black),
-                                        ),
-                                        child: Center(
-                                          child: Container(
-                                            height: 40,
-                                            width: 80,
-                                            decoration: BoxDecoration(
-                                              color: Colors.orange,
-                                              shape: BoxShape.circle,
-                                              border: Border.all(
-                                                  color: Colors.black),
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                    )
-                                  ],
-                                ))
-                            : ClipRRect(
-                                borderRadius: BorderRadius.circular(10),
-                                child: SizedBox(
+          child: Form(
+            key: _formKey,
+            child: Column(
+              children: [
+                CustomeHeader(
+                  text: "Day ${widget.dayCount}",
+                  ontap: () {},
+                ),
+                Constants.sizeH30,
+                Align(
+                  alignment: Alignment.center,
+                  child: Container(
+                      margin: const EdgeInsets.only(right: 10),
+                      height: 330,
+                      width: 220,
+                      decoration: BoxDecoration(
+                        color: const Color.fromARGB(126, 37, 150, 190),
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                      child: _file == null
+                          ? widget.id == null
+                              ? Padding(
+                                  padding: const EdgeInsets.all(15.0),
                                   child: Column(
                                     children: [
-                                      Image.file(
-                                        File(
-                                          path,
+                                      RichText(
+                                        text: TextSpan(
+                                          style: Constants.poppinsFont.copyWith(
+                                              color: Constants.scaffoldColor,
+                                              fontSize: 32,
+                                              fontWeight: FontWeight.w100),
+                                          children: const <TextSpan>[
+                                            TextSpan(
+                                              text: 'Add Your Progress ',
+                                            ),
+                                            TextSpan(text: 'Image Here Buddy'),
+                                          ],
                                         ),
-                                        fit: BoxFit.cover,
-                                        height: 230,
-                                        width: 250,
                                       ),
-                                      Constants.sizeH20,
+                                      Constants.sizeH30,
                                       InkWell(
                                         onTap: () {
                                           _selectImage(context);
@@ -216,69 +176,121 @@ class _CreateTransoProgressScreenState
                                         ),
                                       )
                                     ],
+                                  ))
+                              : ClipRRect(
+                                  borderRadius: BorderRadius.circular(10),
+                                  child: SizedBox(
+                                    child: Column(
+                                      children: [
+                                        Image.file(
+                                          File(
+                                            path,
+                                          ),
+                                          fit: BoxFit.cover,
+                                          height: 230,
+                                          width: 250,
+                                        ),
+                                        Constants.sizeH20,
+                                        InkWell(
+                                          onTap: () {
+                                            _selectImage(context);
+                                          },
+                                          child: Container(
+                                            height: 60,
+                                            width: 80,
+                                            decoration: BoxDecoration(
+                                              shape: BoxShape.circle,
+                                              border: Border.all(
+                                                  color: Colors.black),
+                                            ),
+                                            child: Center(
+                                              child: Container(
+                                                height: 40,
+                                                width: 80,
+                                                decoration: BoxDecoration(
+                                                  color: Colors.orange,
+                                                  shape: BoxShape.circle,
+                                                  border: Border.all(
+                                                      color: Colors.black),
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                        )
+                                      ],
+                                    ),
                                   ),
+                                )
+                          : ClipRRect(
+                              borderRadius: BorderRadius.circular(10),
+                              child: SizedBox(
+                                child: Image.file(
+                                  File(
+                                    _file!,
+                                  ),
+                                  fit: BoxFit.cover,
+                                  height: 330,
+                                  width: 250,
                                 ),
-                              )
-                        : ClipRRect(
-                            borderRadius: BorderRadius.circular(10),
-                            child: SizedBox(
-                              child: Image.file(
-                                File(
-                                  _file!,
-                                ),
-                                fit: BoxFit.cover,
-                                height: 330,
-                                width: 250,
                               ),
-                            ),
-                          )),
-              ),
-              Constants.sizeH50,
-              InputField(
-                nameController: _statusController,
-                heading: "Current Status",
-                hight: 150,
-              ),
-              widget.id == null
-                  ? ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Color.fromARGB(126, 37, 150, 190),
-                        fixedSize: Size(size.width * 0.4, 50),
-                      ),
-                      onPressed: () {
-                        saveData(_file ?? "No");
+                            )),
+                ),
+                Constants.sizeH50,
+                InputField(
+                  nameController: _statusController,
+                  heading: "Current Status",
+                  height: 150,
+                  validationMessage: "Enter current status",
+                ),
+                widget.id == null
+                    ? ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Color.fromARGB(126, 37, 150, 190),
+                          fixedSize: Size(size.width * 0.4, 50),
+                        ),
+                        onPressed: () {
+                          if (_statusController.text.isNotEmpty) {
+                            saveData(_file ?? "No");
 
-                        _provider.readData();
-                        _provider.readDetailsData();
-                      },
-                      child: Text(
-                        'Create',
-                        style: Constants.poppinsFont.copyWith(
-                            color: Colors.white,
-                            fontSize: 15,
-                            fontWeight: FontWeight.bold),
-                      ),
-                    )
-                  : ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Color.fromARGB(126, 37, 150, 190),
-                        fixedSize: Size(size.width * 0.4, 50),
-                      ),
-                      onPressed: () {
-                        updateData(_file ?? path);
+                            _provider.readData();
+                            _provider.readDetailsData();
+                          } else {
+                            Constants.showSnackBar("Fill All Data");
+                          }
+                        },
+                        child: Text(
+                          'Create',
+                          style: Constants.poppinsFont.copyWith(
+                              color: Colors.white,
+                              fontSize: 15,
+                              fontWeight: FontWeight.bold),
+                        ),
+                      )
+                    : ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Color.fromARGB(126, 37, 150, 190),
+                          fixedSize: Size(size.width * 0.4, 50),
+                        ),
+                        onPressed: () {
+                          if (_statusController.text.isNotEmpty) {
+                            updateData(_file ?? path);
 
-                        _provider.readData();
-                        _provider.readDetailsData();
-                      },
-                      child: Text(
-                        'Update',
-                        style: Constants.poppinsFont.copyWith(
-                            color: Colors.white,
-                            fontSize: 15,
-                            fontWeight: FontWeight.bold),
-                      ),
-                    )
-            ],
+                            _provider.readData();
+                            _provider.readDetailsData();
+                          } else {
+                            Constants.showSnackBar("Fill All Data");
+                          }
+                        },
+                        child: Text(
+                          'Update',
+                          style: Constants.poppinsFont.copyWith(
+                              color: Colors.white,
+                              fontSize: 15,
+                              fontWeight: FontWeight.bold),
+                        ),
+                      )
+              ],
+            ),
           ),
         ),
       ),

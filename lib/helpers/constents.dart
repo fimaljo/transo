@@ -9,6 +9,18 @@ import 'package:google_fonts/google_fonts.dart';
 @immutable
 class Constants {
   const Constants._();
+  static final messengerKey = GlobalKey<ScaffoldMessengerState>();
+
+  static showSnackBar(String? text) {
+    if (text == null) return;
+    final snackBar = SnackBar(
+      content: Text(text),
+      backgroundColor: Colors.red,
+    );
+    messengerKey.currentState!
+      ..removeCurrentSnackBar()
+      ..showSnackBar(snackBar);
+  }
 
   /// The main orange-red color used for theming the app.
   static const Color primaryColor = Color(0xFFf03400);

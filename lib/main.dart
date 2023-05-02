@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:transo/helpers/constents.dart';
 import 'package:transo/helpers/sql_helper.dart';
 import 'package:transo/provider/local_db_provider.dart';
 import 'package:transo/views/screens/home_screen.dart';
@@ -28,6 +29,7 @@ class MyApp extends StatelessWidget {
       child: MaterialApp(
         title: 'Tanso',
         debugShowCheckedModeBanner: false,
+        scaffoldMessengerKey: Constants.messengerKey,
         theme: ThemeData(
           primarySwatch: Colors.blue,
         ),

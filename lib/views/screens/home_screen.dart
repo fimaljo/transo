@@ -162,7 +162,7 @@ class _HomeScreenState extends State<HomeScreen> {
         style: Constants.poppinsFont.copyWith(
             color: Constants.scaffoldColor,
             fontSize: 36,
-            fontWeight: FontWeight.w100),
+            fontWeight: FontWeight.w300),
         children: <TextSpan>[
           TextSpan(
             text: 'Hello',
@@ -236,12 +236,17 @@ class TransfoCard extends StatelessWidget {
                   ),
                 ),
               ),
-              Text(
-                title,
-                style: Constants.poppinsFont.copyWith(
-                    color: Constants.scaffoldColor,
-                    fontSize: 15,
-                    fontWeight: FontWeight.bold),
+              SizedBox(
+                width: 100,
+                height: 20,
+                child: Text(
+                  title,
+                  style: Constants.poppinsFont.copyWith(
+                      color: Constants.scaffoldColor,
+                      fontSize: 15,
+                      fontWeight: FontWeight.bold,
+                      overflow: TextOverflow.ellipsis),
+                ),
               ),
               Text(
                 "$totalDays Days",
