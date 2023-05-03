@@ -405,7 +405,7 @@ class _TransoOverViewState extends State<TransoOverView> {
                                                             .copyWith(
                                                                 color: Colors
                                                                     .white,
-                                                                fontSize: 11,
+                                                                fontSize: 10,
                                                                 fontWeight:
                                                                     FontWeight
                                                                         .bold),

@@ -62,10 +62,12 @@ class _HomeScreenState extends State<HomeScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              //app bar
               CustomeAppBar(provider: provider, imagePath: imagePaths.last)
                   .animate(delay: const Duration(milliseconds: 220))
                   .slideY(),
               Constants.sizeH30,
+              // text wish
               textWish(names.last)
                   .animate(delay: const Duration(milliseconds: 300))
                   .slideX(),
@@ -76,9 +78,11 @@ class _HomeScreenState extends State<HomeScreen> {
                     fontSize: 16,
                     fontWeight: FontWeight.w100),
               ).animate(delay: const Duration(milliseconds: 400)).slideX(),
+              //create button
               CreateTransfoWidget(size: size)
                   .animate(delay: const Duration(milliseconds: 500))
                   .slideY(),
+              // heading
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -107,7 +111,6 @@ class _HomeScreenState extends State<HomeScreen> {
                               Image.asset(
                                 "assets/images/cloud.png",
                                 height: 200,
-                               
                               ),
                               Text(
                                 "Create Your Transformation",
@@ -145,7 +148,9 @@ class _HomeScreenState extends State<HomeScreen> {
                               totalDays: int.parse(datas.totalDays),
                               datas: datas,
                               assetImage: image,
-                            ).animate(delay: const Duration(seconds: 1)).moveY();
+                            )
+                                .animate(delay: const Duration(seconds: 1))
+                                .moveY();
                           },
                         ),
                 ),
@@ -174,7 +179,3 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 }
-
-
-
-

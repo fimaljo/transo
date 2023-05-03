@@ -97,7 +97,7 @@ class _CreateTransoProgressScreenState
 
   updateData(String path) async {
     await _provider.updateDetailsData(_statusController.text, path, widget.id!);
-   if (!mounted) return;
+    if (!mounted) return;
     Navigator.pop(context);
   }
 
@@ -118,123 +118,7 @@ class _CreateTransoProgressScreenState
                   ontap: () {},
                 ),
                 Constants.sizeH30,
-                Align(
-                  alignment: Alignment.center,
-                  child: Container(
-                      margin: const EdgeInsets.only(right: 10),
-                      height: 330,
-                      width: 220,
-                      decoration: BoxDecoration(
-                        color: const Color.fromARGB(126, 37, 150, 190),
-                        borderRadius: BorderRadius.circular(20),
-                      ),
-                      child: _file == null
-                          ? widget.id == null
-                              ? Padding(
-                                  padding: const EdgeInsets.all(15.0),
-                                  child: Column(
-                                    children: [
-                                      RichText(
-                                        text: TextSpan(
-                                          style: Constants.poppinsFont.copyWith(
-                                              color: Constants.scaffoldColor,
-                                              fontSize: 32,
-                                              fontWeight: FontWeight.w100),
-                                          children: const <TextSpan>[
-                                            TextSpan(
-                                              text: 'Add Your Progress ',
-                                            ),
-                                            TextSpan(text: 'Image Here Buddy'),
-                                          ],
-                                        ),
-                                      ),
-                                      Constants.sizeH30,
-                                      InkWell(
-                                        onTap: () {
-                                          _selectImage(context);
-                                        },
-                                        child: Container(
-                                          height: 60,
-                                          width: 80,
-                                          decoration: BoxDecoration(
-                                            shape: BoxShape.circle,
-                                            border:
-                                                Border.all(color: Colors.black),
-                                          ),
-                                          child: Center(
-                                            child: Container(
-                                              height: 40,
-                                              width: 80,
-                                              decoration: BoxDecoration(
-                                                color: Colors.orange,
-                                                shape: BoxShape.circle,
-                                                border: Border.all(
-                                                    color: Colors.black),
-                                              ),
-                                            ),
-                                          ),
-                                        ),
-                                      )
-                                    ],
-                                  ))
-                              : ClipRRect(
-                                  borderRadius: BorderRadius.circular(10),
-                                  child: SizedBox(
-                                    child: Column(
-                                      children: [
-                                        Image.file(
-                                          File(
-                                            path,
-                                          ),
-                                          fit: BoxFit.cover,
-                                          height: 230,
-                                          width: 250,
-                                        ),
-                                        Constants.sizeH20,
-                                        InkWell(
-                                          onTap: () {
-                                            _selectImage(context);
-                                          },
-                                          child: Container(
-                                            height: 60,
-                                            width: 80,
-                                            decoration: BoxDecoration(
-                                              shape: BoxShape.circle,
-                                              border: Border.all(
-                                                  color: Colors.black),
-                                            ),
-                                            child: Center(
-                                              child: Container(
-                                                height: 40,
-                                                width: 80,
-                                                decoration: BoxDecoration(
-                                                  color: Colors.orange,
-                                                  shape: BoxShape.circle,
-                                                  border: Border.all(
-                                                      color: Colors.black),
-                                                ),
-                                              ),
-                                            ),
-                                          ),
-                                        )
-                                      ],
-                                    ),
-                                  ),
-                                )
-                          : ClipRRect(
-                              borderRadius: BorderRadius.circular(10),
-                              child: SizedBox(
-                                child: Image.file(
-                                  File(
-                                    _file!,
-                                  ),
-                                  fit: BoxFit.cover,
-                                  height: 330,
-                                  width: 250,
-                                ),
-                              ),
-                            )),
-                ),
+                addImageCard(context),
                 Constants.sizeH50,
                 InputField(
                   nameController: _statusController,
@@ -245,7 +129,8 @@ class _CreateTransoProgressScreenState
                 widget.id == null
                     ? ElevatedButton(
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: const Color.fromARGB(126, 37, 150, 190),
+                          backgroundColor:
+                              const Color.fromARGB(126, 37, 150, 190),
                           fixedSize: Size(size.width * 0.4, 50),
                         ),
                         onPressed: () {
@@ -268,7 +153,8 @@ class _CreateTransoProgressScreenState
                       )
                     : ElevatedButton(
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: const Color.fromARGB(126, 37, 150, 190),
+                          backgroundColor:
+                              const Color.fromARGB(126, 37, 150, 190),
                           fixedSize: Size(size.width * 0.4, 50),
                         ),
                         onPressed: () {
@@ -295,5 +181,126 @@ class _CreateTransoProgressScreenState
         ),
       ),
     );
+  }
+
+  Align addImageCard(BuildContext context) {
+    return Align(
+                alignment: Alignment.center,
+                child: Container(
+                  margin: const EdgeInsets.only(right: 10),
+                  height: 330,
+                  width: 220,
+                  decoration: BoxDecoration(
+                    color: const Color.fromARGB(126, 37, 150, 190),
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                  child: _file == null
+                      ? widget.id == null
+                          ? Padding(
+                              padding: const EdgeInsets.all(15.0),
+                              child: Column(
+                                children: [
+                                  RichText(
+                                    text: TextSpan(
+                                      style: Constants.poppinsFont.copyWith(
+                                          color: Constants.scaffoldColor,
+                                          fontSize: 32,
+                                          fontWeight: FontWeight.w100),
+                                      children: const <TextSpan>[
+                                        TextSpan(
+                                          text: 'Add Your Progress ',
+                                        ),
+                                        TextSpan(text: 'Image Here Buddy'),
+                                      ],
+                                    ),
+                                  ),
+                                  Constants.sizeH30,
+                                  InkWell(
+                                    onTap: () {
+                                      _selectImage(context);
+                                    },
+                                    child: Container(
+                                      height: 60,
+                                      width: 80,
+                                      decoration: BoxDecoration(
+                                        shape: BoxShape.circle,
+                                        border:
+                                            Border.all(color: Colors.black),
+                                      ),
+                                      child: Center(
+                                        child: Container(
+                                          height: 40,
+                                          width: 80,
+                                          decoration: BoxDecoration(
+                                            color: Colors.orange,
+                                            shape: BoxShape.circle,
+                                            border: Border.all(
+                                                color: Colors.black),
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  )
+                                ],
+                              ))
+                          : ClipRRect(
+                              borderRadius: BorderRadius.circular(10),
+                              child: SizedBox(
+                                child: Column(
+                                  children: [
+                                    Image.file(
+                                      File(
+                                        path,
+                                      ),
+                                      fit: BoxFit.cover,
+                                      height: 230,
+                                      width: 250,
+                                    ),
+                                    Constants.sizeH20,
+                                    InkWell(
+                                      onTap: () {
+                                        _selectImage(context);
+                                      },
+                                      child: Container(
+                                        height: 60,
+                                        width: 80,
+                                        decoration: BoxDecoration(
+                                          shape: BoxShape.circle,
+                                          border:
+                                              Border.all(color: Colors.black),
+                                        ),
+                                        child: Center(
+                                          child: Container(
+                                            height: 40,
+                                            width: 80,
+                                            decoration: BoxDecoration(
+                                              color: Colors.orange,
+                                              shape: BoxShape.circle,
+                                              border: Border.all(
+                                                  color: Colors.black),
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    )
+                                  ],
+                                ),
+                              ),
+                            )
+                      : ClipRRect(
+                          borderRadius: BorderRadius.circular(10),
+                          child: SizedBox(
+                            child: Image.file(
+                              File(
+                                _file!,
+                              ),
+                              fit: BoxFit.cover,
+                              height: 330,
+                              width: 250,
+                            ),
+                          ),
+                        ),
+                ),
+              );
   }
 }
